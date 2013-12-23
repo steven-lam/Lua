@@ -11,6 +11,12 @@ function love.load()
 		table.insert(hero.shots,shot)
 	end
 
+	function love.keyreleased(key)
+		if(key == " ") then
+			shoot()
+		end
+	end
+
 	enemies = {}
 	for i=0,7 do 
 		enemy = {}
@@ -19,6 +25,7 @@ function love.load()
 		enemy.x = i * (enemy.width + 60) + 100
 		enemy.y = enemy.height + 100
 		table.insert(enemies, enemy)
+	end
 end
 
 function love.update(dt)
@@ -37,6 +44,7 @@ function love.update(dt)
 		if v.y > 465 then
 			-- you lose!
 		end
+	emd
 
 end
 
