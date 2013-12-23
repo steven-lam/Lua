@@ -14,24 +14,36 @@ function love.load()
 		enemy = {}
 		enemy.width = 40
 		enemy.height = 20
-		enemy.x = i * (enemy.width + 60) + 100
-		enemy.y = enemy.height + 100
+		enemy.x = math.random(40,800)
+		enemy.y = math.random(20.600)
 		table.insert(enemies, enemy)
 	end
 end
 
 function love.keyreleased(key)
-	if(key == " ") then
+	if(key == "w") then
 		shoot(0)
-	end
-
-	if(key == "f") then 
+	elseif(key == "s") then 
 		shoot(1)
+	elseif(key == "a") then 
+		shoot(2)	
+	elseif(key == "d") then 
+		shoot(3)			
 	end
 end
 
 
 function love.update(dt)
+	if next (enemies) == nil then	
+	for i=0,7 do 
+		enemy = {}
+		enemy.width = 40
+		enemy.height = 20
+		enemy.x = math.random(40,800)
+		enemy.y = math.random(20.600)
+		table.insert(enemies, enemy)
+	end
+  end 
 	-- keyboard actions for the hero
 	if love.keyboard.isDown("left") then
 		hero.x = hero.x - hero.speed*dt
@@ -49,9 +61,13 @@ function love.update(dt)
 	for i,v in ipairs(hero.shots) do
 		-- move them up up up
 		if (v.direction == 0) then 
-		v.y = v.y - dt * 100
+		v.y = v.y - dt * 300
 		elseif (v.direction == 1) then 
-		v.y = v.y + dt *100
+		v.y = v.y + dt * 300
+		elseif (v.direction == 2) then 
+		v.x = v.x - dt * 300
+		elseif (v.direction == 3) then 
+		v.x = v.x + dt * 300
 	   end 
 
 		--mark shots that are not visible for removal
@@ -110,7 +126,11 @@ function love.draw()
 
 	-- shots
 	for i,v in ipairs(hero.shots) do 
+		if (v.direction == 0 or v.direction == 1) then 
 		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
+		elseif (v.direction == 2 or v.direction == 3) then 
+		love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
+	end
 	end
 end
 
