@@ -15,7 +15,7 @@ function love.load()
 		enemy.width = 40
 		enemy.height = 20
 		enemy.x = math.random(40,800)
-		enemy.y = math.random(20.600)
+		enemy.y = math.random(20,465)
 		table.insert(enemies, enemy)
 	end
 end
@@ -40,19 +40,19 @@ function love.update(dt)
 		enemy.width = 40
 		enemy.height = 20
 		enemy.x = math.random(40,800)
-		enemy.y = math.random(20.600)
+		enemy.y = math.random(20,465)
 		table.insert(enemies, enemy)
 	end
   end 
 	-- keyboard actions for the hero
 	if love.keyboard.isDown("left") then
-		hero.x = hero.x - hero.speed*dt
+		hero.x = hero.x - hero.speed*dt*1.5
 	elseif love.keyboard.isDown("right") then
-		hero.x = hero.x + hero.speed*dt
+		hero.x = hero.x + hero.speed*dt*1.5
    elseif love.keyboard.isDown("up") then	
-   	hero.y = hero.y - hero.speed*dt 
+   	hero.y = hero.y - hero.speed*dt*1.5
    elseif love.keyboard.isDown("down") then	
-      hero.y = hero.y + hero.speed*dt 	
+      hero.y = hero.y + hero.speed*dt*1.5	
 	end
 	-- shoot detection
 	local remEnemy = {}
