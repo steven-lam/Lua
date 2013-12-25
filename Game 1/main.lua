@@ -27,10 +27,12 @@ end
 
 
 function love.update(dt)
+  
   -- spanw more enemies when all 7 are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
   end 
+  
   -- restricts hero's movement to inside the screen
   if (hero.x < 0) then -- if hero moves pass left border
     hero.x = 0
@@ -41,6 +43,7 @@ function love.update(dt)
   elseif (hero.y > (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
     hero.y = love.window.getHeight() - hero.height
   end
+  
 	-- keyboard actions for the hero
 	if love.keyboard.isDown("left") then
 		hero.x = hero.x - hero.speed*dt*1.5
@@ -51,9 +54,11 @@ function love.update(dt)
    elseif love.keyboard.isDown("down") then	
       hero.y = hero.y + hero.speed*dt*1.5	
 	end
+  
 	-- shoot detection
 	local remEnemy = {}
 	local remShot = {}
+  
 	-- update those shots
 	for i,v in ipairs(hero.shots) do
 		-- move them up up up
@@ -82,6 +87,7 @@ function love.update(dt)
 			end
 		end
 	end
+  
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
    	table.remove(enemies, v)
@@ -90,16 +96,23 @@ function love.update(dt)
   for i,v in ipairs(remShot) do 
    	table.remove(hero.shots, v)
   end 
+  
   -- update those enemies
   for i,v in ipairs(enemies) do
-  -- let them falll down slowly
-	v.y = v.y + dt
-
-	-- check for collision with ground
-	   if v.y > 465 then
-	    	-- you lose!
-	   end	
+    -- make the enemies follow the hero
+    distX =  hero.x - v.x
+    distY =  hero.y - v.y
+    distance = math.sqrt(distX*distX+distY*distY)
+    velocityX = distX/distance*10
+    velocityY = distY/distance*10
+    v.x = v.x + velocityX*dt
+    v.y = v.y + velocityY*dt
   end
+
+--	-- check for collision with ground
+--	if v.y > 465 then
+--	-- you lose!
+--	end	
 end
 
 function love.draw()
