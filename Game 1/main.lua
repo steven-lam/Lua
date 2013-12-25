@@ -96,9 +96,9 @@ function love.draw()
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(bg)
 
-	-- let's draw some ground
-	love.graphics.setColor(0,255,0,255)
-	love.graphics.rectangle("fill", 0, 465, 800, 150)
+--	-- let's draw some ground
+--	love.graphics.setColor(0,255,0,255)
+--	love.graphics.rectangle("fill", 0, 465, 800, 150)
 
 	-- let's draw our hero
 	love.graphics.setColor(255,255,0,255)
@@ -178,7 +178,7 @@ function spawnEnemy(heroX, heroY)
       enemy.x = math.random(heroX + heroRadius + 1, love.window.getWidth() - enemy.width + 1)
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
     end
-    -- enemy is built, insert to enemies table
+    -- enemy is built, insert to enemiaaes table
 		table.insert(enemies, enemy)
 	end
 end
