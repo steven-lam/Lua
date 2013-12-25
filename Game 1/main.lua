@@ -54,14 +54,26 @@ function love.update(dt)
   end
   
 	-- keyboard actions for the hero
-	if (leftKey) then
+	if (leftKey and not rightKey and not upKey and not downKey) then
 		hero.x = hero.x - hero.speed*dt*1.5
-	elseif (rightKey) then
+	elseif (not leftKey and rightKey and not upKey and not downKey) then
 		hero.x = hero.x + hero.speed*dt*1.5
-  elseif (upKey) then	
+  elseif (not leftKey and not rightKey and upKey and not downKey) then	
    	hero.y = hero.y - hero.speed*dt*1.5
-  elseif (downKey) then	
-     hero.y = hero.y + hero.speed*dt*1.5	
+  elseif (not leftKey and not rightKey and not upKey and downKey) then	
+    hero.y = hero.y + hero.speed*dt*1.5	
+  elseif (leftKey and not rightKey and upKey and not downKey) then
+    hero.x = hero.x - hero.speed*dt*1.5
+    hero.y = hero.y - hero.speed*dt*1.5
+  elseif (leftKey and not rightKey and not upKey and downKey) then
+    hero.x = hero.x - hero.speed*dt*1.5
+    hero.y = hero.y + hero.speed*dt*1.5
+  elseif (not leftKey and rightKey and upKey and not downKey) then
+    hero.x = hero.x + hero.speed*dt*1.5
+    hero.y = hero.y - hero.speed*dt*1.5   
+  elseif (not leftKey and rightKey and not upKey and downKey) then
+    hero.x = hero.x + hero.speed*dt*1.5
+    hero.y = hero.y + hero.speed*dt*1.5   
 	end
   
 	-- shoot detection
