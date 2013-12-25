@@ -27,9 +27,20 @@ end
 
 
 function love.update(dt)
+  -- spanw more enemies when all 7 are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
   end 
+  -- restricts hero's movement to inside the screen
+  if (hero.x <= hero.width) then -- if hero moves pass left border
+    hero.x = hero.width
+  elseif (hero.x >= (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
+    hero.x = love.window.getWidth() - hero.width
+  elseif (hero.y <= hero.height) then -- if hero moves above top border
+    hero.y = hero.height
+  elseif (hero.y >= (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
+    hero.y = love.window.getHeight() - hero.height
+  end
 	-- keyboard actions for the hero
 	if love.keyboard.isDown("left") then
 		hero.x = hero.x - hero.speed*dt*1.5
@@ -135,6 +146,7 @@ end
 --	topY   = heroY - 50
 --	bottomY = heroY + 50
 --end
+
 -- checking collision
 function checkCollision(ax1,ay1,aw,ah, bx1,by1,bw,bh)
 	local ax2,ay2,bx2,by2 = ax1 + aw, ay1 + ah, bx1 + bw, by1 + bh 
@@ -155,7 +167,7 @@ function spawnEnemy(heroX, heroY)
 		enemy.height = 50
     enemy.x = 0;
     enemy.y = 0;
-    local quadrant = math.random(1,4) -- 5 is not included
+    local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
     if (quadrant == 1) then
       enemy.x = math.random(enemy.width, heroX - heroRadius - enemy.width + 1)  -- plus one because of last pixel is excluded
