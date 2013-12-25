@@ -32,13 +32,13 @@ function love.update(dt)
     spawnEnemy(hero.x, hero.y)
   end 
   -- restricts hero's movement to inside the screen
-  if (hero.x <= hero.width) then -- if hero moves pass left border
-    hero.x = hero.width
-  elseif (hero.x >= (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
+  if (hero.x < 0) then -- if hero moves pass left border
+    hero.x = 0
+  elseif (hero.x > (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
     hero.x = love.window.getWidth() - hero.width
-  elseif (hero.y <= hero.height) then -- if hero moves above top border
-    hero.y = hero.height
-  elseif (hero.y >= (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
+  elseif (hero.y < 0) then -- if hero moves above top border
+    hero.y = 0
+  elseif (hero.y > (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
     hero.y = love.window.getHeight() - hero.height
   end
 	-- keyboard actions for the hero
