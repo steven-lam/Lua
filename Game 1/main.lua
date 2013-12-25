@@ -11,6 +11,8 @@ function love.load()
 
 	enemies = {}
   spawnEnemy(hero.x, hero.y)
+  
+  lost = 0
 end
 
 function love.keyreleased(key)
@@ -23,6 +25,10 @@ function love.keyreleased(key)
 	elseif(key == "d") then 
 		shoot(3)			
 	end
+  
+  if(key == " ") then
+    lost = 0
+  end
 end
 
 
@@ -109,25 +115,30 @@ function love.update(dt)
     v.y = v.y + velocityY*dt
   end
 
---	-- check for collision with ground
---	if v.y > 465 then
---	-- you lose!
---	end	
+  -- checks if you lose
+  for i,v in ipairs(enemies) do
+    if checkCollision(v.x,v.y,v.width,v.height, hero.x,hero.y,hero.width,hero.height) then 
+      lost = 1
+    end
+ end 
+
 end
 
 function love.draw()
-	-- draws background
+	
+  -- draws background
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(bg)
+  
+  if (lost == 1) then
+    love.graphics.print("you lose",400,300)
+  end
+  
   -- draw the hero's coordinates
   love.graphics.setColor(255, 0, 0)
   love.graphics.print(hero.x,600,100)
   love.graphics.print(hero.y,600,125)
   
---	-- let's draw some ground
---	love.graphics.setColor(0,255,0,255)
---	love.graphics.rectangle("fill", 0, 465, 800, 150)
-
 	-- let's draw our hero
 	love.graphics.setColor(255,255,0,255)
 	love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
