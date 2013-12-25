@@ -155,26 +155,19 @@ function spawnEnemy(heroX, heroY)
 		enemy.height = 50
     enemy.x = 0;
     enemy.y = 0;
-    local quadrant = math.random(1,5) -- 5 is not included
+    local quadrant = math.random(1,4) -- 5 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
     if (quadrant == 1) then
       enemy.x = math.random(enemy.width, heroX - heroRadius - enemy.width + 1)  -- plus one because of last pixel is excluded
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
     elseif (quadrant == 2) then
-      enemy.x = math.random(heroX - heroRadius, heroX + 1)
+      enemy.x = math.random(heroX - heroRadius, heroX + heroRadius + 1)
       if (hemisphere == 0) then
         enemy.y = math.random(enemy.height,heroY - heroRadius - enemy.height + 1)
       else
         enemy.y = math.random(heroY + heroRadius + enemy.height, love.window.getHeight() - enemy.height + 1)
       end
     elseif (quadrant == 3) then
-      enemy.x = math.random(heroX + 1, heroX + heroRadius + 1)
-      if (hemisphere == 0) then
-        enemy.y = math.random(enemy.height, heroY - heroRadius - enemy.height + 1)
-      else 
-        enemy.y = math.random(heroY + heroRadius + enemy.height, love.window.getHeight() - enemy.height + 1)
-      end 
-    elseif (quadrant == 4) then
       enemy.x = math.random(heroX + heroRadius + 1, love.window.getWidth() - enemy.width + 1)
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
     end
