@@ -1,6 +1,6 @@
 function love.load()
 	bg = love.graphics.newImage("bg.png")
-
+  heroRadius = 50
 	hero = {}
 	hero.x = 300
 	hero.y = 450
@@ -10,14 +10,7 @@ function love.load()
 	hero.shots = {} -- holds our fired shots
 
 	enemies = {}
-	for i=0,7 do 
-		enemy = {}
-		enemy.width = 40
-		enemy.height = 20
-		enemy.x = math.random(40,800)
-		enemy.y = math.random(20,465)
-		table.insert(enemies, enemy)
-	end
+  spawnEnemy(hero.x, hero.y)
 end
 
 function love.keyreleased(key)
@@ -35,14 +28,7 @@ end
 
 function love.update(dt)
 	if next (enemies) == nil then	
-	for i=0,7 do 
-		enemy = {}
-		enemy.width = 40
-		enemy.height = 20
-		enemy.x = math.random(40,800)
-		enemy.y = math.random(20,465)
-		table.insert(enemies, enemy)
-	end
+    spawnEnemy(hero.x, hero.y)
   end 
 	-- keyboard actions for the hero
 	if love.keyboard.isDown("left") then
@@ -143,8 +129,56 @@ function shoot (z)
 	table.insert(hero.shots,shot)
 end
 
+--function checkLocation (heroX, heroY, enemyX, enemyY)
+--	leftX  = heroX - 50
+--	rightX = heroX + 50
+--	topY   = heroY - 50
+--	bottomY = heroY + 50
+--end
 -- checking collision
 function checkCollision(ax1,ay1,aw,ah, bx1,by1,bw,bh)
 	local ax2,ay2,bx2,by2 = ax1 + aw, ay1 + ah, bx1 + bw, by1 + bh 
 	return ax1 < bx2 and ax2 > bx1 and ay1 < by2 and ay2 > by1
+end
+
+-- enemy spawning function that takes in hero's location
+function spawnEnemy(heroX, heroY)
+  -- Grabs window dimensions
+  local top  = 0 
+  local bottom = love.window.getHeight()
+  local left = 0
+  local right = love.window.getWidth()
+  -- Creates 7 enemy
+  for i=0,7 do 
+    local enemy = {}
+		enemy.width = 50
+		enemy.height = 50
+    enemy.x = 0;
+    enemy.y = 0;
+    local quadrant = math.random(1,5) -- 5 is not included
+    local hemisphere = math.random(0,2) -- 2 is not included
+    if (quadrant == 1) then
+      enemy.x = math.random(enemy.width, heroX - heroRadius - enemy.width + 1)  -- plus one because of last pixel is excluded
+      enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
+    elseif (quadrant == 2) then
+      enemy.x = math.random(heroX - heroRadius, heroX + 1)
+      if (hemisphere == 0) then
+        enemy.y = math.random(enemy.height,heroY - heroRadius - enemy.height + 1)
+      else
+        enemy.y = math.random(heroY + heroRadius + enemy.height, love.window.getHeight() - enemy.height + 1)
+      end
+    elseif (quadrant == 3) then
+      enemy.x = math.random(heroX + 1, heroX + heroRadius + 1)
+      if (hemisphere == 0) then
+        enemy.y = math.random(enemy.height, heroY - heroRadius - enemy.height + 1)
+      else 
+        enemy.y = math.random(heroY + heroRadius + enemy.height, love.window.getHeight() - enemy.height + 1)
+      end 
+    elseif (quadrant == 4) then
+      enemy.x = math.random(heroX + heroRadius + 1, love.window.getWidth() - enemy.width + 1)
+      enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
+    end
+    -- enemy is built, insert to enemies table
+		table.insert(enemies, enemy)
+	end
 end
