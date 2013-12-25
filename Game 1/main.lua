@@ -126,8 +126,8 @@ function love.update(dt)
     distance = math.sqrt(distX*distX+distY*distY)
     velocityX = distX/distance*10
     velocityY = distY/distance*10
-    v.x = v.x + velocityX*dt
-    v.y = v.y + velocityY*dt
+    v.x = v.x + velocityX*dt*1.5
+    v.y = v.y + velocityY*dt*1.5
   end
 
   -- checks if you lose
