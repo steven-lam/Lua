@@ -33,7 +33,10 @@ end
 
 
 function love.update(dt)
-  
+  leftKey  = love.keyboard.isDown("left")
+  rightKey = love.keyboard.isDown("right")
+  upKey    = love.keyboard.isDown("up")
+  downKey  = love.keyboard.isDown("down")
   -- spanw more enemies when all 7 are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
@@ -51,14 +54,14 @@ function love.update(dt)
   end
   
 	-- keyboard actions for the hero
-	if love.keyboard.isDown("left") then
+	if (leftKey) then
 		hero.x = hero.x - hero.speed*dt*1.5
-	elseif love.keyboard.isDown("right") then
+	elseif (rightKey) then
 		hero.x = hero.x + hero.speed*dt*1.5
-   elseif love.keyboard.isDown("up") then	
+  elseif (upKey) then	
    	hero.y = hero.y - hero.speed*dt*1.5
-   elseif love.keyboard.isDown("down") then	
-      hero.y = hero.y + hero.speed*dt*1.5	
+  elseif (downKey) then	
+     hero.y = hero.y + hero.speed*dt*1.5	
 	end
   
 	-- shoot detection
