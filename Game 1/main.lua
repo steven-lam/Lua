@@ -106,7 +106,9 @@ function love.draw()
 	-- draws background
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(bg)
-
+  love.graphics.setColor(255, 0, 0)
+  love.graphics.print(hero.x,600,100)
+  love.graphics.print(hero.y,600,125)
 --	-- let's draw some ground
 --	love.graphics.setColor(0,255,0,255)
 --	love.graphics.rectangle("fill", 0, 465, 800, 150)
