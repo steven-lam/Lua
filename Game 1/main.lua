@@ -1,11 +1,12 @@
 function love.load()
 	bg = love.graphics.newImage("bg.png")
   heroRadius = 50
-	hero = {}
+  hero = {}
+  hero.img = love.graphics.newImage("rocket.png")
 	hero.x = 300
 	hero.y = 450
-	hero.width = 30
-	hero.height = 15
+	hero.width = 25
+	hero.height = 50
 	hero.speed = 150
 	hero.shots = {} -- holds our fired shots
 
@@ -13,6 +14,8 @@ function love.load()
   spawnEnemy(hero.x, hero.y)
   
   lost = 0
+  rotation = 0
+  rotationValue = 0
 end
 
 function love.keyreleased(key)
@@ -23,12 +26,14 @@ function love.keyreleased(key)
 	elseif(key == "a") then 
 		shoot(2)	
 	elseif(key == "d") then 
-		shoot(3)			
+		shoot(3)	
 	end
   
+  -- if space is pressed
   if(key == " ") then
     lost = 0
   end
+  
 end
 
 
@@ -37,7 +42,14 @@ function love.update(dt)
   rightKey = love.keyboard.isDown("right")
   upKey    = love.keyboard.isDown("up")
   downKey  = love.keyboard.isDown("down")
-  -- spanw more enemies when all 7 are gone
+  
+  if (love.keyboard.isDown("b")) then
+      rotation =  rotation + math.pi 
+  elseif (love.keyboard.isDown("v")) then
+      rotation = rotation - math.pi 
+  end
+  
+  -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
   end 
@@ -140,7 +152,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	
+	local value = rotation
   -- draws background
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(bg)
@@ -154,9 +166,13 @@ function love.draw()
   love.graphics.print(hero.x,600,100)
   love.graphics.print(hero.y,600,125)
   
-	-- let's draw our hero
+  -- draw the rotation Value
+  love.graphics.print(rotation,600,150)
+  
+	-- let's draw our heroa
 	love.graphics.setColor(255,255,0,255)
-	love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
+  love.graphics.draw(hero.img, hero.x, hero.y , math.rad(rotation), 1, 1, 0, 0)
+	--love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
 
 	-- enemies
 	love.graphics.setColor(0,255,255,255)
@@ -177,11 +193,11 @@ end
 function shoot (z)
 	local shot = {}
 	shot.x = hero.x + hero.width/2
-	shot.y = hero.y
+	shot.y = hero.y + hero.height/2
 	shot.direction = z
-  if (z == 2 or z == 3) then
-  shot.y = hero.y + hero.height/2
-  end
+--  if (z == 2 or z == 3) then
+--  shot.y = hero.y + hero.height/2
+--  end
 
 	table.insert(hero.shots,shot)
 end
