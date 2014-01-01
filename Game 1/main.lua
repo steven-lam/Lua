@@ -3,6 +3,9 @@ function love.load()
   heroRadius = 50
   hero = {}
   hero.img = love.graphics.newImage("rocket.png")
+  hero.nose = {}
+  hero.nose.x = hero.img:getWidth()/2
+  hero.nose.y = hero.img:getHeight()/2
 	hero.x = 300
 	hero.y = 450
 	hero.width = 25
