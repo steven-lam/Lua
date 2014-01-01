@@ -56,7 +56,16 @@ function love.update(dt)
   end
   
   -- Have to continuously update the nose
-   newRotation = rotation % 360
+  if (rotation > 0) then
+    newRotation = rotation % 360
+  elseif (rotation < 0) then
+    rotation = math.abs(rotation)
+    newRotation = rotation % 360
+    newRotation = -1 * newRotation
+    rotation = -1 * rotation
+  else
+    newRotation = rotation % 360
+  end
   hero.nose.x = math.cos(180-rotation) * hero.img:getWidth()/2 + hero.x
   hero.nose.y = math.sin(180-rotation) * hero.img:getHeight()/2 + hero.y
   
