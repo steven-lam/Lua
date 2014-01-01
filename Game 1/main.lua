@@ -22,14 +22,16 @@ function love.load()
 end
 
 function love.keyreleased(key)
-	if(key == "w") then
-		shoot(0)
-	elseif(key == "s") then 
-		shoot(1)
-	elseif(key == "a") then 
-		shoot(2)	
-	elseif(key == "d") then 
-		shoot(3)	
+--	if(key == "w") then
+--		shoot(0)
+--	elseif(key == "s") then 
+--		shoot(1)
+--	elseif(key == "a") then 
+--		shoot(2)	
+--	elseif(key == "d") then 
+--		shoot(3)	
+  if (key == "w") then
+    shoot()
 	end
   
   -- if space is pressed
@@ -54,8 +56,8 @@ function love.update(dt)
   end
   
   -- Have to continuously update the nose
-  hero.nose.x = hero.img:getWidth()/2 + hero.x
-  hero.nose.y = hero.img:getHeight()/2 + hero.y
+  hero.nose.x = math.cos(90-rotation) * hero.img:getWidth()/2 + hero.x
+  hero.nose.y = math.sin(90-rotation) * hero.img:getHeight()/2 + hero.y
   
   -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
@@ -102,16 +104,17 @@ function love.update(dt)
   
 	-- update those shots
 	for i,v in ipairs(hero.shots) do
-		-- move them up up up
-		if (v.direction == 0) then 
-		v.y = v.y - dt * 300
-		elseif (v.direction == 1) then 
-		v.y = v.y + dt * 300
-		elseif (v.direction == 2) then 
-		v.x = v.x - dt * 300
-		elseif (v.direction == 3) then 
-		v.x = v.x + dt * 300
-	   end 
+--		if (v.direction == 0) then 
+--		v.y = v.y - dt * 300
+--		elseif (v.direction == 1) then 
+--		v.y = v.y + dt * 300
+--		elseif (v.direction == 2) then 
+--		v.x = v.x - dt * 300
+--		elseif (v.direction == 3) then 
+--		v.x = v.x + dt * 300
+     v.x = v.x + dt * 300
+     v.y = v.y + dt * 300
+	--end 
 
 		--mark shots that are not visible for removal
 		if v.y < 0 then
@@ -190,21 +193,22 @@ function love.draw()
 
 	-- shots
 	for i,v in ipairs(hero.shots) do 
-		if (v.direction == 0 or v.direction == 1) then 
-		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
-		elseif (v.direction == 2 or v.direction == 3) then 
-		love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
-	end
+--		if (v.direction == 0 or v.direction == 1) then 
+--		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
+--		elseif (v.direction == 2 or v.direction == 3) then 
+--		love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
+  love.graphics.rectangle("fill", v.x, v.y, 5,2)
+--	end
 	end
 end
 
-function shoot (z)
+function shoot ()
 	local shot = {}
 --	shot.x = hero.x + hero.width/2
 --	shot.y = hero.y + hero.height/2
 	shot.x = hero.nose.x
 	shot.y = hero.nose.y
-	shot.direction = z
+--	shot.direction = z
 --  if (z == 2 or z == 3) then
 --  shot.y = hero.y + hero.height/2
 --  end
