@@ -66,8 +66,9 @@ function love.update(dt)
   else
     newRotation = rotation % 360
   end
-  hero.nose.x = math.cos(180-rotation) * hero.img:getWidth()/2 + hero.x
-  hero.nose.y = math.sin(180-rotation) * hero.img:getHeight()/2 + hero.y
+  
+  hero.nose.x = math.cos(90-newRotation) * (hero.img:getWidth()/2) + hero.x
+  hero.nose.y = math.sin(90-newRotation) * (hero.img:getHeight()/2) + hero.y
   
   -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
@@ -184,16 +185,26 @@ function love.draw()
   
   -- draw the hero's coordinates
   love.graphics.setColor(255, 0, 0)
+  love.graphics.print("Hero X: ",500,100)
   love.graphics.print(hero.x,600,100)
+  love.graphics.print("Hero Y: ",500,125)
   love.graphics.print(hero.y,600,125)
   
   -- draw the rotation Value
+  love.graphics.print("rotation: ",500,150)
   love.graphics.print(rotation,600,150)
   
-    -- draw the rotation Value
+  -- draw the rotation Value
+  love.graphics.print("newRotation: ",500,175)
   love.graphics.print(newRotation,600,175)
   
-	-- let's draw our heroa
+  -- draw the rotation Value
+  love.graphics.print("nose X : ",500,200)
+  love.graphics.print(hero.nose.x,600,200)
+  love.graphics.print("nose X : ",500,225)
+  love.graphics.print(hero.nose.y,600,225)
+  
+	-- let's draw our hero
 	love.graphics.setColor(255,255,0,255)
   love.graphics.draw(hero.img, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:getHeight()/2)
 	--love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
