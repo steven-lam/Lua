@@ -171,7 +171,7 @@ function love.draw()
   
 	-- let's draw our heroa
 	love.graphics.setColor(255,255,0,255)
-  love.graphics.draw(hero.img, hero.x, hero.y , math.rad(rotation), 1, 1, 0, 0)
+  love.graphics.draw(hero.img, hero.x, hero.y , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:getHeight()/2)
 	--love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
 
 	-- enemies
