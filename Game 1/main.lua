@@ -56,8 +56,9 @@ function love.update(dt)
   end
   
   -- Have to continuously update the nose
-  hero.nose.x = math.cos(90-rotation) * hero.img:getWidth()/2 + hero.x
-  hero.nose.y = math.sin(90-rotation) * hero.img:getHeight()/2 + hero.y
+   newRotation = rotation % 360
+  hero.nose.x = math.cos(180-rotation) * hero.img:getWidth()/2 + hero.x
+  hero.nose.y = math.sin(180-rotation) * hero.img:getHeight()/2 + hero.y
   
   -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
@@ -179,6 +180,9 @@ function love.draw()
   
   -- draw the rotation Value
   love.graphics.print(rotation,600,150)
+  
+    -- draw the rotation Value
+  love.graphics.print(newRotation,600,175)
   
 	-- let's draw our heroa
 	love.graphics.setColor(255,255,0,255)
