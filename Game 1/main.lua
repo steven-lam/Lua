@@ -46,11 +46,16 @@ function love.update(dt)
   upKey    = love.keyboard.isDown("up")
   downKey  = love.keyboard.isDown("down")
   
+  -- Rotates the hero's image
   if (love.keyboard.isDown("b")) then
       rotation =  rotation + math.pi 
   elseif (love.keyboard.isDown("v")) then
       rotation = rotation - math.pi 
   end
+  
+  -- Have to continuously update the nose
+  hero.nose.x = hero.img:getWidth()/2 + hero.x
+  hero.nose.y = hero.img:getHeight()/2 + hero.y
   
   -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
