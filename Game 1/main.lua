@@ -3,16 +3,16 @@ function love.load()
   heroRadius = 50
   hero = {}
   hero.img = love.graphics.newImage("rocket.png")
-  hero.nose = {}
-  hero.nose.x = hero.img:getWidth()/2
-  hero.nose.y = hero.img:getHeight()/2
 	hero.x = 300
 	hero.y = 450
 	hero.width = 25
 	hero.height = 50
 	hero.speed = 150
 	hero.shots = {} -- holds our fired shots
-
+  hero.nose = {}
+  hero.nose.x = hero.img:getWidth()/2 + hero.x
+  hero.nose.y = hero.img:getHeight()/2 + hero.y
+  
 	enemies = {}
   spawnEnemy(hero.x, hero.y)
   
@@ -195,8 +195,10 @@ end
 
 function shoot (z)
 	local shot = {}
-	shot.x = hero.x + hero.width/2
-	shot.y = hero.y + hero.height/2
+--	shot.x = hero.x + hero.width/2
+--	shot.y = hero.y + hero.height/2
+	shot.x = hero.nose.x
+	shot.y = hero.nose.y
 	shot.direction = z
 --  if (z == 2 or z == 3) then
 --  shot.y = hero.y + hero.height/2
