@@ -49,9 +49,11 @@ function love.update(dt)
   downKey  = love.keyboard.isDown("down")
   
   -- Rotates the hero's image
-  if (love.keyboard.isDown("a")) then
-      rotation =  rotation + math.pi 
+  if (love.keyboard.isDown("d") and love.keyboard.isDown("a")) then
+      rotation = rotation;
   elseif (love.keyboard.isDown("d")) then
+      rotation =  rotation + math.pi 
+  elseif (love.keyboard.isDown("a")) then
       rotation = rotation - math.pi 
   end
   
