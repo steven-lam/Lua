@@ -11,7 +11,7 @@ function love.load()
 	hero.shots = {} -- holds our fired shots
   hero.nose = {}
   hero.nose.x = hero.x
-  hero.nose.y = hero.img:getHeight()/2 - hero.y
+  hero.nose.y = hero.y - hero.img:getHeight()/2
   
 	enemies = {}
   spawnEnemy(hero.x, hero.y)
@@ -19,6 +19,7 @@ function love.load()
   lost = 0
   rotation = 0
   rotationValue = 0
+  newRotation = 0
 end
 
 function love.keyreleased(key)
@@ -125,8 +126,9 @@ function love.update(dt)
 --		v.x = v.x - dt * 300
 --		elseif (v.direction == 3) then 
 --		v.x = v.x + dt * 300
-     v.x = v.x + dt * 300
-     v.y = v.y + dt * 300
+  v.x = v.x + v.velocityx * dt * 50
+  v.y = v.y + v.velocityy * dt * 50
+
 	--end 
 
 		--mark shots that are not visible for removal
@@ -208,7 +210,7 @@ function love.draw()
   
 	-- let's draw our hero
 	love.graphics.setColor(255,255,0,255)
-  love.graphics.draw(hero.img, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:getHeight()/2)
+  love.graphics.draw(hero.img, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:   getHeight()/2)
 	--love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
 
 	-- enemies
@@ -230,15 +232,10 @@ end
 
 function shoot ()
 	local shot = {}
---	shot.x = hero.x + hero.width/2
---	shot.y = hero.y + hero.height/2
 	shot.x = hero.nose.x+5
 	shot.y = hero.nose.y+20
---	shot.direction = z
---  if (z == 2 or z == 3) then
---  shot.y = hero.y + hero.height/2
---  end
-
+  shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+  shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
 	table.insert(hero.shots,shot)
 end
 
