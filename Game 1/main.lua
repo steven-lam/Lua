@@ -31,12 +31,12 @@ function love.keyreleased(key)
 --		shoot(2)	
 --	elseif(key == "d") then 
 --		shoot(3)	
-  if (key == "w") then
+  if (key == " ") then
     shoot()
 	end
   
   -- if space is pressed
-  if(key == " ") then
+  if(key == "r") then
     lost = 0
   end
   
@@ -44,17 +44,17 @@ end
 
 
 function love.update(dt)
-  leftKey  = love.keyboard.isDown("left")
-  rightKey = love.keyboard.isDown("right")
-  upKey    = love.keyboard.isDown("up")
-  downKey  = love.keyboard.isDown("down")
+  leftKey  = love.keyboard.isDown("a")
+  rightKey = love.keyboard.isDown("d")
+  upKey    = love.keyboard.isDown("w")
+  downKey  = love.keyboard.isDown("s")
   
   -- Rotates the hero's image
-  if (love.keyboard.isDown("d") and love.keyboard.isDown("a")) then
+  if (love.keyboard.isDown("left") and love.keyboard.isDown("right")) then
       rotation = rotation;
-  elseif (love.keyboard.isDown("d")) then
+  elseif (love.keyboard.isDown("right")) then
       rotation =  rotation + math.pi 
-  elseif (love.keyboard.isDown("a")) then
+  elseif (love.keyboard.isDown("left")) then
       rotation = rotation - math.pi 
   end
   
