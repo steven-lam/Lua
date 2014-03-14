@@ -2,7 +2,7 @@ function love.load()
 	bg = love.graphics.newImage("bg.png")
   heroRadius = 50
   hero = {}
-  hero.img = love.graphics.newImage("rocket.png")
+  hero.img = love.graphics.newImage("spacerocket2.png")
 	hero.x = 300
 	hero.y = 450
 	hero.width = 25
