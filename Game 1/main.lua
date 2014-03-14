@@ -2,7 +2,7 @@ function love.load()
 	bg = love.graphics.newImage("bg.png")
   heroRadius = 50
   hero = {}
-  hero.img = love.graphics.newImage("spacerocket2.png")
+  hero.img = love.graphics.newImage("spacerocket3.png")
 	hero.x = 300
 	hero.y = 450
 	hero.width = 25
@@ -10,8 +10,8 @@ function love.load()
 	hero.speed = 150
 	hero.shots = {} -- holds our fired shots
   hero.nose = {}
-  hero.nose.x = hero.img:getWidth()/2 + hero.x
-  hero.nose.y = hero.img:getHeight()/2 + hero.y
+  hero.nose.x = hero.x
+  hero.nose.y = hero.img:getHeight()/2 - hero.y
   
 	enemies = {}
   spawnEnemy(hero.x, hero.y)
@@ -69,8 +69,8 @@ function love.update(dt)
     newRotation = rotation % 360
   end
   
-  hero.nose.x = math.cos(90-newRotation) * (hero.img:getHeight()/2) + hero.x
-  hero.nose.y = math.sin(90-newRotation) * (hero.img:getHeight()/2) + hero.y
+  hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
+  hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
   -- spawn more enemies when all 7 are gone
 	if next (enemies) == nil then	
