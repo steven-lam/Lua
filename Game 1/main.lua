@@ -126,8 +126,8 @@ function love.update(dt)
 --		v.x = v.x - dt * 300
 --		elseif (v.direction == 3) then 
 --		v.x = v.x + dt * 300
-  v.x = v.x + v.velocityx * dt * 50
-  v.y = v.y + v.velocityy * dt * 50
+  v.x = v.x + v.velocityx * dt * 25
+  v.y = v.y + v.velocityy * dt * 25
 
 	--end 
 
@@ -225,15 +225,15 @@ function love.draw()
 --		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
 --		elseif (v.direction == 2 or v.direction == 3) then 
 --		love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
-  love.graphics.rectangle("fill", v.x, v.y, 5,2)
+  love.graphics.rectangle("fill", v.x, v.y, 2,2)
 --	end
 	end
 end
 
 function shoot ()
 	local shot = {}
-	shot.x = hero.nose.x+5
-	shot.y = hero.nose.y+20
+	shot.x = hero.nose.x + hero.img:getWidth() / 2;
+	shot.y = hero.nose.y + hero.img:getHeight() / 2;
   shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
 	table.insert(hero.shots,shot)
