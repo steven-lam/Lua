@@ -179,25 +179,25 @@ function love.draw()
   end
   
   -- draw the hero's coordinates
-  love.graphics.setColor(255, 0, 0)
-  love.graphics.print("Hero X: ",500,100)
-  love.graphics.print(hero.x,600,100)
-  love.graphics.print("Hero Y: ",500,125)
-  love.graphics.print(hero.y,600,125)
+--  love.graphics.setColor(255, 0, 0)
+--  love.graphics.print("Hero X: ",500,100)
+--  love.graphics.print(hero.x,600,100)
+--  love.graphics.print("Hero Y: ",500,125)
+--  love.graphics.print(hero.y,600,125)
   
-  -- draw the rotation Value
-  love.graphics.print("rotation: ",500,150)
-  love.graphics.print(rotation,600,150)
+--  -- draw the rotation Value
+--  love.graphics.print("rotation: ",500,150)
+--  love.graphics.print(rotation,600,150)
   
-  -- draw the rotation Value
-  love.graphics.print("newRotation: ",500,175)
-  love.graphics.print(newRotation,600,175)
+--  -- draw the rotation Value
+--  love.graphics.print("newRotation: ",500,175)
+--  love.graphics.print(newRotation,600,175)
   
-  -- draw the rotation Value
-  love.graphics.print("nose X : ",500,200)
-  love.graphics.print(hero.nose.x,600,200)
-  love.graphics.print("nose Y : ",500,225)
-  love.graphics.print(hero.nose.y,600,225)
+--  -- draw the rotation Value
+--  love.graphics.print("nose X : ",500,200)
+--  love.graphics.print(hero.nose.x,600,200)
+--  love.graphics.print("nose Y : ",500,225)
+--  love.graphics.print(hero.nose.y,600,225)
   
   -- draw the hero's score
   love.graphics.print("Score : ",350,10)
