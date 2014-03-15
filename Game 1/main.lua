@@ -43,7 +43,7 @@ function love.keyreleased(key)
 end
 
 
-function love.update(dt)
+function love.update(dt)  
   leftKey  = love.keyboard.isDown("a")
   rightKey = love.keyboard.isDown("d")
   upKey    = love.keyboard.isDown("w")
@@ -59,12 +59,10 @@ function love.update(dt)
   end
   
   -- Have to continuously update the nose
-  if (rotation > 0) then
-    newRotation = rotation % 360
-  elseif (rotation < 0) then
-    rotation = math.abs(rotation)
-    newRotation = rotation % 360
-    newRotation = -1 * newRotation
+  -- Keeps the bounds for angle from 0-360
+  if (rotation < 0) then
+    rotation = (math.abs(rotation))
+    newRotation = -1 * rotation % 360
     rotation = -1 * rotation
   else
     newRotation = rotation % 360
@@ -208,7 +206,7 @@ function love.draw()
 	love.graphics.setColor(0,255,255,255)
 	for i,v in ipairs(enemies) do
 		love.graphics.rectangle("fill", v.x, v.y, v.width, v.height)
-	end
+  end
 
 	-- shots
 	for i,v in ipairs(hero.shots) do 
