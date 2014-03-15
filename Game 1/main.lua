@@ -8,6 +8,7 @@ function love.load()
 	hero.width = 25
 	hero.height = 50
 	hero.speed = 150
+  hero.score = 0
 	hero.shots = {} -- holds our fired shots
   hero.nose = {}
   hero.nose.x = hero.x
@@ -132,6 +133,7 @@ function love.update(dt)
 				table.insert(remEnemy, ii)
 				-- mark the shot to be removed
 				table.insert(remShot, i)
+        hero.score = hero.score + 1
 			end
 		end
 	end
@@ -196,6 +198,10 @@ function love.draw()
   love.graphics.print(hero.nose.x,600,200)
   love.graphics.print("nose Y : ",500,225)
   love.graphics.print(hero.nose.y,600,225)
+  
+  -- draw the hero's score
+  love.graphics.print("Score : ",350,10)
+  love.graphics.print(hero.score,450,10)
   
 	-- let's draw our hero
 	love.graphics.setColor(255,255,0,255)
