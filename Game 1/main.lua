@@ -78,17 +78,6 @@ function love.update(dt)
     spawnEnemy(hero.x, hero.y)
   end 
   
-  -- restricts hero's movement to inside the screen
-  if (hero.x < 0) then -- if hero moves pass left border
-    hero.x = 0
-  elseif (hero.x > (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
-    hero.x = love.window.getWidth() - hero.width
-  elseif (hero.y < 0) then -- if hero moves above top border
-    hero.y = 0
-  elseif (hero.y > (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
-    hero.y = love.window.getHeight() - hero.height
-  end
-  
 	-- keyboard actions for the hero
 	if (leftKey and not rightKey and not upKey and not downKey) then
 		hero.x = hero.x - hero.speed*dt*1.5
@@ -106,11 +95,13 @@ function love.update(dt)
     hero.y = hero.y + hero.speed*dt*1.5
   elseif (not leftKey and rightKey and upKey and not downKey) then
     hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y - hero.speed*dt*1.5   
+    hero.y = hero.y - hero.speed*dt*1.5 
   elseif (not leftKey and rightKey and not upKey and downKey) then
     hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y + hero.speed*dt*1.5   
+    hero.y = hero.y + hero.speed*dt*1.5 
 	end
+  cornerCheck()
+  inBounds()
   
 	-- shoot detection
 	local remEnemy = {}
@@ -230,6 +221,34 @@ function love.draw()
 	end
 end
 
+function inBounds ()
+    -- restricts hero's movement to inside the screen
+  if (hero.x < 0) then -- if hero moves pass left border
+    hero.x = 0
+  elseif (hero.x > (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
+    hero.x = love.window.getWidth() - hero.width
+  elseif (hero.y < 0) then -- if hero moves above top border
+    hero.y = 0
+  elseif (hero.y > (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
+    hero.y = love.window.getHeight() - hero.height
+  end
+end
+
+function cornerCheck()
+  if(hero.x < 0 and hero.y < 0) then
+    hero.x = 0
+    hero.y = 0
+  elseif (hero.x < 0 and hero.y > love.window.getHeight() - hero.height) then
+    hero.x = 0
+    hero.y = love.window.getHeight() - hero.height
+  elseif (hero.x > love.window.getWidth() - hero.width and hero.y < 0) then
+    hero.x = love.window.getWidth() - hero.width
+    hero.y = 0
+  elseif (hero.x > love.window.getWidth() - hero.width and hero.y > love.window.getHeight() - hero.height) then
+    hero.x = love.window.getWidth() - hero.width
+    hero.y = love.window.getHeight() - hero.height
+  end
+end
 function shoot ()
 	local shot = {}
 	shot.x = hero.nose.x + hero.img:getWidth() / 2;
