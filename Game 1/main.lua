@@ -15,8 +15,10 @@ function love.load()
   hero.nose.y = hero.y - hero.img:getHeight()/2
   
 	enemies = {}
-  spawnEnemy(hero.x, hero.y)
   
+ enemyCount = 0;
+ spawnEnemy(hero.x, hero.y)
+
   lost = 0
   rotation = 0
   rotationValue = 0
@@ -72,7 +74,11 @@ function love.update(dt)
   hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
   hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
-  -- spawn more enemies when all 7 are gone
+--  if enemyCount == nil then
+--    spawnEnemy(hero.x, hero.y)
+--  end
+  
+  --spawn more enemies when all 8 are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
   end 
@@ -141,6 +147,7 @@ function love.update(dt)
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
    	table.remove(enemies, v)
+   enemyCount = enemyCount - 1;
   end 
  
   for i,v in ipairs(remShot) do 
@@ -202,6 +209,9 @@ function love.draw()
   -- draw the hero's score
   love.graphics.print("Score : ",350,10)
   love.graphics.print(hero.score,450,10)
+  
+  love.graphics.print("Enemy Count : ", 500, 250)
+  love.graphics.print(enemyCount, 600, 250)
   
 	-- let's draw our hero
 	love.graphics.setColor(255,255,255,255)
@@ -307,5 +317,6 @@ function spawnEnemy(heroX, heroY)
     end
     -- enemy is built, insert to enemiaaes table
 		table.insert(enemies, enemy)
+   enemyCount = enemyCount + 1;
 	end
 end
