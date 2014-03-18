@@ -16,8 +16,8 @@ function love.load()
   
 	enemies = {}
   
- enemyCount = 0;
- spawnEnemy(hero.x, hero.y)
+  enemyCount = 0;
+  spawnEnemy(hero.x, hero.y)
 
   lost = 0
   rotation = 0
@@ -264,12 +264,14 @@ function cornerCheck()
   end
 end
 function shoot ()
+  fire = love.audio.newSource("gun-gunshot-01.wav")
 	local shot = {}
 	shot.x = hero.nose.x + hero.img:getWidth() / 2;
 	shot.y = hero.nose.y + hero.img:getHeight() / 2;
   shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
 	table.insert(hero.shots,shot)
+  love.audio.play(fire)
 end
 
 --function checkLocation (heroX, heroY, enemyX, enemyY)
