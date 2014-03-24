@@ -1,8 +1,8 @@
 function love.load()
-	background = love.graphics.newImage("Images/background.png")
+	bg = love.graphics.newImage("bg.png")
   heroRadius = 50
   hero = {}
-  hero.img = love.graphics.newImage("Images/rocket.png")
+  hero.img = love.graphics.newImage("spacerocket2.png")
 	hero.x = 300
 	hero.y = 450
 	hero.width = 25
@@ -16,19 +16,16 @@ function love.load()
   
 	enemies = {}
   
-  enemyCount = 0;
   spawnEnemy(hero.x, hero.y)
-
+ 
+  enemies.count = 0;
   lost = 0
   rotation = 0
   rotationValue = 0
   newRotation = 0
-  
-  bgMusic = love.audio.newSource("Sounds/Requiem for a Dream.mp3")
-  love.audio.play(bgMusic)
 end
 
-function love.keypressed(key)
+function love.keyreleased(key)
 --	if(key == "w") then
 --		shoot(0)
 --	elseif(key == "s") then 
@@ -40,6 +37,7 @@ function love.keypressed(key)
   if (key == " ") then
     shoot()
 	end
+  
   -- if space is pressed
   if(key == "r") then
     lost = 0
@@ -76,7 +74,7 @@ function love.update(dt)
   hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
   hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
---  if enemyCount == nil then
+--  if enemies.count == nil then
 --    spawnEnemy(hero.x, hero.y)
 --  end
   
@@ -136,7 +134,7 @@ function love.update(dt)
 
 		-- check for collision with enemies
 		for ii,vv in ipairs(enemies) do
-			if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
+			if checkCollision(v.x,v.y,2,5,vv.x,vv.y,vv.width,vv.height) then 
 				-- mark that enemy for removal
 				table.insert(remEnemy, ii)
 				-- mark the shot to be removed
@@ -149,7 +147,7 @@ function love.update(dt)
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
    	table.remove(enemies, v)
-    enemyCount = enemyCount - 1;
+   enemies.count = enemies.count - 1;
   end 
  
   for i,v in ipairs(remShot) do 
@@ -181,7 +179,7 @@ function love.draw()
 	local value = rotation
   -- draws background
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.draw(background)
+	love.graphics.draw(bg)
   
   if (lost == 1) then
     love.graphics.print("you lose",400,300)
@@ -213,7 +211,7 @@ function love.draw()
   love.graphics.print(hero.score,450,10)
   
   love.graphics.print("Enemy Count : ", 500, 250)
-  love.graphics.print(enemyCount, 600, 250)
+  love.graphics.print(enemies.count, 600, 250)
   
 	-- let's draw our hero
 	love.graphics.setColor(255,255,255,255)
@@ -221,14 +219,12 @@ function love.draw()
 	--love.graphics.rectangle("fill", hero.x, hero.y, 30, 15)
 
 	-- enemies
-	love.graphics.setColor(255,255,255,255)
+	love.graphics.setColor(0,255,255,255)
 	for i,v in ipairs(enemies) do
-    love.graphics.draw(v.img, v.x, v.y)
-		--love.graphics.rectangle("fill", v.x, v.y, v.width, v.height)
+		love.graphics.rectangle("fill", v.x, v.y, v.width, v.height)
   end
 
 	-- shots
-  love.graphics.setColor(255,0,0)
 	for i,v in ipairs(hero.shots) do 
 --		if (v.direction == 0 or v.direction == 1) then 
 --		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
@@ -268,14 +264,12 @@ function cornerCheck()
   end
 end
 function shoot ()
-  fire = love.audio.newSource("Sounds/shotsSFX.mp3")
 	local shot = {}
 	shot.x = hero.nose.x + hero.img:getWidth() / 2;
 	shot.y = hero.nose.y + hero.img:getHeight() / 2;
   shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
 	table.insert(hero.shots,shot)
-  love.audio.play(fire)
 end
 
 --function checkLocation (heroX, heroY, enemyX, enemyY)
@@ -305,7 +299,6 @@ function spawnEnemy(heroX, heroY)
 		enemy.height = 50
     enemy.x = 0;
     enemy.y = 0;
-    enemy.img = love.graphics.newImage("Images/ant.png");
     local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
     if (quadrant == 1) then
@@ -324,6 +317,6 @@ function spawnEnemy(heroX, heroY)
     end
     -- enemy is built, insert to enemiaaes table
 		table.insert(enemies, enemy)
-    enemyCount = enemyCount + 1;
+   enemies.count = enemies.count + 1;
 	end
 end
