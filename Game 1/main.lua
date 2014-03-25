@@ -1,5 +1,10 @@
 function love.load()
+  love.window.setTitle("SpaceBugs")
+  icon = love.image.newImageData("Images/ant.png")
+  love.window.setIcon(icon)
 	background = love.graphics.newImage("Images/background.png")
+  rightFace = love.graphics.newImage("Images/ant.png")
+  leftFace = love.graphics.newImage("Images/ant2.png")
   heroRadius = 50
   hero = {}
   hero.img = love.graphics.newImage("Images/rocket.png")
@@ -48,7 +53,10 @@ function love.keypressed(key)
 end
 
 
-function love.update(dt)  
+function love.update(dt)
+  -- Fixes the direction the enemy's face
+  enemyImageCheck()
+ 
   leftKey  = love.keyboard.isDown("a")
   rightKey = love.keyboard.isDown("d")
   upKey    = love.keyboard.isDown("w")
@@ -106,7 +114,8 @@ function love.update(dt)
   elseif (not leftKey and rightKey and not upKey and downKey) then
     hero.x = hero.x + hero.speed*dt*1.5
     hero.y = hero.y + hero.speed*dt*1.5 
-	end
+  end
+  
   cornerCheck()
   inBounds()
   
@@ -132,6 +141,12 @@ function love.update(dt)
 		--mark shots that are not visible for removal
 		if v.y < 0 then
 			table.insert(remShot, i)
+    elseif v.y > love.window.getHeight() then
+      table.insert(remShot, i)
+    elseif v.x < 0 then
+      table.insert(remShot, i)
+    elseif v.x > love.window.getWidth() then
+      table.insert(remShot, i)
 		end
 
 		-- check for collision with enemies
@@ -174,7 +189,6 @@ function love.update(dt)
       lost = 1
     end
  end 
-
 end
 
 function love.draw()
@@ -268,7 +282,7 @@ function cornerCheck()
   end
 end
 function shoot ()
-  fire = love.audio.newSource("Sounds/shotsSFX.mp3")
+  fire = love.audio.newSource("Sounds/ShotsSFX.mp3")
 	local shot = {}
 	shot.x = hero.nose.x + hero.img:getWidth() / 2;
 	shot.y = hero.nose.y + hero.img:getHeight() / 2;
@@ -298,6 +312,7 @@ function spawnEnemy(heroX, heroY)
   local bottom = love.window.getHeight()
   local left = 0
   local right = love.window.getWidth()
+  
   -- Creates 7 enemy
   for i=0,7 do 
     local enemy = {}
@@ -322,8 +337,25 @@ function spawnEnemy(heroX, heroY)
       enemy.x = math.random(heroX + heroRadius + 1, love.window.getWidth() - enemy.width + 1)
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
     end
-    -- enemy is built, insert to enemiaaes table
+    -- enemy is built, insert to enemies table
 		table.insert(enemies, enemy)
     enemyCount = enemyCount + 1;
 	end
+end
+
+-- fixes enemy's image
+function enemyImageCheck()
+	for i,v in ipairs(enemies) do
+    if(v.x == hero.x) then
+      if(v.y > hero.x) then
+        v.img = rightFace
+      else
+        v.img = leftFace
+      end
+    elseif(v.x > hero.x) then
+      v.img = leftFace
+    else
+      v.img = rightFace
+    end
+  end 
 end
