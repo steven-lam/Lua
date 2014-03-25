@@ -22,6 +22,8 @@ function love.load()
   hero.nose = {}
   hero.nose.x = hero.x
   hero.nose.y = hero.y - hero.img:getHeight()/2
+  hero.velocityX = 0
+  hero.velocityY = 0
   heroRadius = 50
   -- enemy table, count, and creates enemy
 	enemies = {}
@@ -171,10 +173,10 @@ function love.update(dt)
     distX =  hero.x - v.x
     distY =  hero.y - v.y
     distance = math.sqrt(distX*distX+distY*distY)
-    velocityX = distX/distance*10
-    velocityY = distY/distance*10
-    v.x = v.x + velocityX*dt*1.5
-    v.y = v.y + velocityY*dt*1.5
+    enemyVelocityX = distX/distance*10
+    enemyVelocityY = distY/distance*10
+    v.x = v.x + enemyVelocityX*dt*1.5
+    v.y = v.y + enemyVelocityY*dt*1.5
   end
 
   -- checks if you lose
@@ -248,35 +250,16 @@ function love.draw()
 end
 
 function moveHero(dt) 
-  leftKey  = love.keyboard.isDown("a")
-  rightKey = love.keyboard.isDown("d")
-  upKey    = love.keyboard.isDown("w")
-  downKey  = love.keyboard.isDown("s")
+  forward = love.keyboard.isDown("w")
+  -- updates hero's movement based on the direction he is facing
+  hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+  hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
-  if(leftKey or rightKey or upKey or downKey) then
+  if(forward) then
     love.audio.play(thrusters)
     -- keyboard actions for the hero
-    if (leftKey and not rightKey and not upKey and not downKey) then
-      hero.x = hero.x - hero.speed*dt*1.5
-    elseif (not leftKey and rightKey and not upKey and not downKey) then
-      hero.x = hero.x + hero.speed*dt*1.5
-    elseif (not leftKey and not rightKey and upKey and not downKey) then	
-      hero.y = hero.y - hero.speed*dt*1.5 
-    elseif (not leftKey and not rightKey and not upKey and downKey) then	
-      hero.y = hero.y + hero.speed*dt*1.5	
-    elseif (leftKey and not rightKey and upKey and not downKey) then
-      hero.x = hero.x - hero.speed*dt*1.5 
-      hero.y = hero.y - hero.speed*dt*1.5 
-    elseif (leftKey and not rightKey and not upKey and downKey) then
-      hero.x = hero.x - hero.speed*dt*1.5
-      hero.y = hero.y + hero.speed*dt*1.5
-    elseif (not leftKey and rightKey and upKey and not downKey) then
-      hero.x = hero.x + hero.speed*dt*1.5
-      hero.y = hero.y - hero.speed*dt*1.5 
-    elseif (not leftKey and rightKey and not upKey and downKey) then
-      hero.x = hero.x + hero.speed*dt*1.5
-      hero.y = hero.y + hero.speed*dt*1.5 
-    end
+      hero.x = hero.x + hero.velocityX*dt*15
+      hero.y = hero.y + hero.velocityY*dt*15
   else 
     love.audio.stop(thrusters)
   end
