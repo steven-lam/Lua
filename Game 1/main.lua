@@ -1,11 +1,15 @@
 function love.load()
+  -- title of game
   love.window.setTitle("SpaceBugs")
+  -- icon for game
   icon = love.image.newImageData("Images/ant.png")
   love.window.setIcon(icon)
+  -- background's image
 	background = love.graphics.newImage("Images/background.png")
-  rightFace = love.graphics.newImage("Images/ant.png")
+  -- bug's right and left image
+  rightFace = love.graphics.newImage("Images/ant.png") 
   leftFace = love.graphics.newImage("Images/ant2.png")
-  heroRadius = 50
+  -- hero's table and stats
   hero = {}
   hero.img = love.graphics.newImage("Images/rocket.png")
 	hero.x = 300
@@ -18,19 +22,22 @@ function love.load()
   hero.nose = {}
   hero.nose.x = hero.x
   hero.nose.y = hero.y - hero.img:getHeight()/2
-  
+  heroRadius = 50
+  -- enemy table, count, and creates enemy
 	enemies = {}
-  
   enemyCount = 0;
   spawnEnemy(hero.x, hero.y)
-
+  -- game state
   lost = 0
+  -- rotation values for hero's rotation
   rotation = 0
   rotationValue = 0
   newRotation = 0
-  
+  -- background's audio
   bgMusic = love.audio.newSource("Sounds/Requiem for a Dream.mp3")
   love.audio.play(bgMusic)
+  -- thruster's audio
+  thrusters = love.audio.newSource("Sounds/thrusters.wav")
 end
 
 function love.keypressed(key)
@@ -234,27 +241,32 @@ function moveHero(dt)
   upKey    = love.keyboard.isDown("w")
   downKey  = love.keyboard.isDown("s")
   
-  -- keyboard actions for the hero
-	if (leftKey and not rightKey and not upKey and not downKey) then
-		hero.x = hero.x - hero.speed*dt*1.5
-	elseif (not leftKey and rightKey and not upKey and not downKey) then
-		hero.x = hero.x + hero.speed*dt*1.5
-  elseif (not leftKey and not rightKey and upKey and not downKey) then	
-   	hero.y = hero.y - hero.speed*dt*1.5
-  elseif (not leftKey and not rightKey and not upKey and downKey) then	
-    hero.y = hero.y + hero.speed*dt*1.5	
-  elseif (leftKey and not rightKey and upKey and not downKey) then
-    hero.x = hero.x - hero.speed*dt*1.5
-    hero.y = hero.y - hero.speed*dt*1.5
-  elseif (leftKey and not rightKey and not upKey and downKey) then
-    hero.x = hero.x - hero.speed*dt*1.5
-    hero.y = hero.y + hero.speed*dt*1.5
-  elseif (not leftKey and rightKey and upKey and not downKey) then
-    hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y - hero.speed*dt*1.5 
-  elseif (not leftKey and rightKey and not upKey and downKey) then
-    hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y + hero.speed*dt*1.5 
+  if(leftKey or rightKey or upKey or downKey) then
+    love.audio.play(thrusters)
+    -- keyboard actions for the hero
+    if (leftKey and not rightKey and not upKey and not downKey) then
+      hero.x = hero.x - hero.speed*dt*1.5
+    elseif (not leftKey and rightKey and not upKey and not downKey) then
+      hero.x = hero.x + hero.speed*dt*1.5
+    elseif (not leftKey and not rightKey and upKey and not downKey) then	
+      hero.y = hero.y - hero.speed*dt*1.5
+    elseif (not leftKey and not rightKey and not upKey and downKey) then	
+      hero.y = hero.y + hero.speed*dt*1.5	
+    elseif (leftKey and not rightKey and upKey and not downKey) then
+      hero.x = hero.x - hero.speed*dt*1.5
+      hero.y = hero.y - hero.speed*dt*1.5
+    elseif (leftKey and not rightKey and not upKey and downKey) then
+      hero.x = hero.x - hero.speed*dt*1.5
+      hero.y = hero.y + hero.speed*dt*1.5
+    elseif (not leftKey and rightKey and upKey and not downKey) then
+      hero.x = hero.x + hero.speed*dt*1.5
+      hero.y = hero.y - hero.speed*dt*1.5 
+    elseif (not leftKey and rightKey and not upKey and downKey) then
+      hero.x = hero.x + hero.speed*dt*1.5
+      hero.y = hero.y + hero.speed*dt*1.5 
+    end
+  else 
+    love.audio.stop(thrusters)
   end
 end
 
@@ -286,6 +298,7 @@ function cornerCheck()
     hero.y = love.window.getHeight() - hero.height
   end
 end
+
 function shoot ()
   fire = love.audio.newSource("Sounds/ShotsSFX.mp3")
 	local shot = {}
