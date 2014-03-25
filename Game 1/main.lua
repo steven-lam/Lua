@@ -114,7 +114,7 @@ function love.update(dt)
 	local remEnemy = {}
 	local remShot = {}
   
-	-- update those shots
+	-- update shots
 	for i,v in ipairs(hero.shots) do
 --		if (v.direction == 0) then 
 --		v.y = v.y - dt * 300
@@ -155,7 +155,10 @@ function love.update(dt)
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
    	table.remove(enemies, v)
+      -- bug's death audio
+    deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
     enemyCount = enemyCount - 1;
+    love.audio.play(deadBugSFX)
   end 
  
   for i,v in ipairs(remShot) do 
@@ -258,12 +261,12 @@ function moveHero(dt)
     elseif (not leftKey and rightKey and not upKey and not downKey) then
       hero.x = hero.x + hero.speed*dt*1.5
     elseif (not leftKey and not rightKey and upKey and not downKey) then	
-      hero.y = hero.y - hero.speed*dt*1.5
+      hero.y = hero.y - hero.speed*dt*1.5 
     elseif (not leftKey and not rightKey and not upKey and downKey) then	
       hero.y = hero.y + hero.speed*dt*1.5	
     elseif (leftKey and not rightKey and upKey and not downKey) then
-      hero.x = hero.x - hero.speed*dt*1.5
-      hero.y = hero.y - hero.speed*dt*1.5
+      hero.x = hero.x - hero.speed*dt*1.5 
+      hero.y = hero.y - hero.speed*dt*1.5 
     elseif (leftKey and not rightKey and not upKey and downKey) then
       hero.x = hero.x - hero.speed*dt*1.5
       hero.y = hero.y + hero.speed*dt*1.5
