@@ -109,23 +109,13 @@ function love.update(dt)
     spawnEnemy(hero.x, hero.y)
   end 
   
-  cornerCheck()
-  inBounds()
-  
 	-- shoot detection
 	local remEnemy = {}
 	local remShot = {}
   
 	-- update shots
 	for i,v in ipairs(hero.shots) do
---		if (v.direction == 0) then 
---		v.y = v.y - dt * 300
---		elseif (v.direction == 1) then 
---		v.y = v.y + dt * 300
---		elseif (v.direction == 2) then 
---		v.x = v.x - dt * 300
---		elseif (v.direction == 3) then 
---		v.x = v.x + dt * 300
+  -- update the shots new location
   v.x = v.x + v.velocityx * dt * 25
   v.y = v.y + v.velocityy * dt * 25
 
@@ -163,6 +153,7 @@ function love.update(dt)
     love.audio.play(deadBugSFX)
   end 
  
+  -- remove the shots that need to be removed
   for i,v in ipairs(remShot) do 
    	table.remove(hero.shots, v)
   end 
@@ -193,6 +184,7 @@ function love.draw()
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(background)
   
+  -- prints that the user lost
   if (lost == 1) then
     love.graphics.print("you lose",400,300)
   end
@@ -263,8 +255,12 @@ function moveHero(dt)
   else 
     love.audio.stop(thrusters)
   end
+  -- verify that the rocket is in bounds
+  cornerCheck()
+  inBounds()
 end
 
+-- checks to see if rocket went out of bound
 function inBounds ()
     -- restricts hero's movement to inside the screen
   if (hero.x < 0) then -- if hero moves pass left border
@@ -278,6 +274,7 @@ function inBounds ()
   end
 end
 
+-- checks if the user went out the window in a corner
 function cornerCheck()
   if(hero.x < 0 and hero.y < 0) then
     hero.x = 0
@@ -294,6 +291,7 @@ function cornerCheck()
   end
 end
 
+-- the firing functions
 function shoot ()
   fire = love.audio.newSource("Sounds/ShotsSFX.mp3")
 	local shot = {}
@@ -328,12 +326,13 @@ function spawnEnemy(heroX, heroY)
   
   -- Creates 7 enemy
   for i=0,7 do 
+    local repeatedEnemy = false
     local enemy = {}
 		enemy.width = 50
 		enemy.height = 50
     enemy.x = 0;
     enemy.y = 0;
-    enemy.img = love.graphics.newImage("Images/ant.png");
+    enemy.img = love.graphics.newImage("Images/ant.png")
     local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
     if (quadrant == 1) then
@@ -350,9 +349,19 @@ function spawnEnemy(heroX, heroY)
       enemy.x = math.random(heroX + heroRadius + 1, love.window.getWidth() - enemy.width + 1)
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
     end
+    
+    for j,v in ipairs(enemies) do
+      if (v.x == enemy.x and v.y == enemy.y) then
+        i = i-1
+        repeatedEnemy = true;
+        break
+      end
+    end
+    if(not repeatedEnemy) then
     -- enemy is built, insert to enemies table
-		table.insert(enemies, enemy)
+    table.insert(enemies, enemy)
     enemyCount = enemyCount + 1;
+    end
 	end
 end
 
