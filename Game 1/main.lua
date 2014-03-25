@@ -57,10 +57,8 @@ function love.update(dt)
   -- Fixes the direction the enemy's face
   enemyImageCheck()
  
-  leftKey  = love.keyboard.isDown("a")
-  rightKey = love.keyboard.isDown("d")
-  upKey    = love.keyboard.isDown("w")
-  downKey  = love.keyboard.isDown("s")
+  -- Updates Hero's movement
+  moveHero(dt)
   
   -- Rotates the hero's image
   if (love.keyboard.isDown("left") and love.keyboard.isDown("right")) then
@@ -92,29 +90,6 @@ function love.update(dt)
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
   end 
-  
-	-- keyboard actions for the hero
-	if (leftKey and not rightKey and not upKey and not downKey) then
-		hero.x = hero.x - hero.speed*dt*1.5
-	elseif (not leftKey and rightKey and not upKey and not downKey) then
-		hero.x = hero.x + hero.speed*dt*1.5
-  elseif (not leftKey and not rightKey and upKey and not downKey) then	
-   	hero.y = hero.y - hero.speed*dt*1.5
-  elseif (not leftKey and not rightKey and not upKey and downKey) then	
-    hero.y = hero.y + hero.speed*dt*1.5	
-  elseif (leftKey and not rightKey and upKey and not downKey) then
-    hero.x = hero.x - hero.speed*dt*1.5
-    hero.y = hero.y - hero.speed*dt*1.5
-  elseif (leftKey and not rightKey and not upKey and downKey) then
-    hero.x = hero.x - hero.speed*dt*1.5
-    hero.y = hero.y + hero.speed*dt*1.5
-  elseif (not leftKey and rightKey and upKey and not downKey) then
-    hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y - hero.speed*dt*1.5 
-  elseif (not leftKey and rightKey and not upKey and downKey) then
-    hero.x = hero.x + hero.speed*dt*1.5
-    hero.y = hero.y + hero.speed*dt*1.5 
-  end
   
   cornerCheck()
   inBounds()
@@ -251,6 +226,36 @@ function love.draw()
   love.graphics.rectangle("fill", v.x, v.y, 2,2)
 --	end
 	end
+end
+
+function moveHero(dt) 
+  leftKey  = love.keyboard.isDown("a")
+  rightKey = love.keyboard.isDown("d")
+  upKey    = love.keyboard.isDown("w")
+  downKey  = love.keyboard.isDown("s")
+  
+  -- keyboard actions for the hero
+	if (leftKey and not rightKey and not upKey and not downKey) then
+		hero.x = hero.x - hero.speed*dt*1.5
+	elseif (not leftKey and rightKey and not upKey and not downKey) then
+		hero.x = hero.x + hero.speed*dt*1.5
+  elseif (not leftKey and not rightKey and upKey and not downKey) then	
+   	hero.y = hero.y - hero.speed*dt*1.5
+  elseif (not leftKey and not rightKey and not upKey and downKey) then	
+    hero.y = hero.y + hero.speed*dt*1.5	
+  elseif (leftKey and not rightKey and upKey and not downKey) then
+    hero.x = hero.x - hero.speed*dt*1.5
+    hero.y = hero.y - hero.speed*dt*1.5
+  elseif (leftKey and not rightKey and not upKey and downKey) then
+    hero.x = hero.x - hero.speed*dt*1.5
+    hero.y = hero.y + hero.speed*dt*1.5
+  elseif (not leftKey and rightKey and upKey and not downKey) then
+    hero.x = hero.x + hero.speed*dt*1.5
+    hero.y = hero.y - hero.speed*dt*1.5 
+  elseif (not leftKey and rightKey and not upKey and downKey) then
+    hero.x = hero.x + hero.speed*dt*1.5
+    hero.y = hero.y + hero.speed*dt*1.5 
+  end
 end
 
 function inBounds ()
