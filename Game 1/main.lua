@@ -62,12 +62,12 @@ function love.keypressed(key)
   end
   
   if(key == "t") then
-    bgState = not bgState
     if(bgState) then
       love.audio.pause(bgMusic)
     else
       love.audio.resume(bgMusic)
     end
+    bgState = not bgState
   end
 end
 
