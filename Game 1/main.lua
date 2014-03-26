@@ -24,6 +24,7 @@ function love.load()
   hero.nose.y = hero.y - hero.img:getHeight()/2
   hero.velocityX = 0
   hero.velocityY = 0
+  hero.momentum = 0
   heroRadius = 50
   -- enemy table, count, and creates enemy
 	enemies = {}
@@ -221,8 +222,8 @@ function love.draw()
 --  love.graphics.print(hero.nose.y,600,225)
   
   -- draw the hero's score
-  love.graphics.print("Score : ",350,10)
-  love.graphics.print(hero.score,450,10)
+  love.graphics.print("Score : ", 500, 200)
+  love.graphics.print(hero.score, 600, 200)
   
   love.graphics.print("Enemy Count : ", 500, 250)
   love.graphics.print(enemyCount, 600, 250)
@@ -253,16 +254,27 @@ end
 
 function moveHero(dt) 
   forward = love.keyboard.isDown("w")
+  
+  -- momentum limit
+  if(hero.momentum >= 15) then
+    hero.momentum = 15
+  elseif(hero.momentum <= 0) then
+    hero.momentum = 0
+  end
+  
   -- updates hero's movement based on the direction he is facing
   hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
+  -- keyboard actions for the hero
+  hero.x = hero.x + hero.velocityX*dt*hero.momentum
+  hero.y = hero.y + hero.velocityY*dt*hero.momentum
+  
   if(forward) then
     love.audio.play(thrusters)
-    -- keyboard actions for the hero
-      hero.x = hero.x + hero.velocityX*dt*15
-      hero.y = hero.y + hero.velocityY*dt*15
+    hero.momentum = hero.momentum + .1
   else 
+    hero.momentum = hero.momentum - .1
     love.audio.stop(thrusters)
   end
   -- verify that the rocket is in bounds
