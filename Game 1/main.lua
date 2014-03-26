@@ -30,7 +30,7 @@ function love.load()
 	enemies = {}
   enemyCount = 0;
   enemyID = 0;
-  maxEnemy = 8
+  maxEnemy = 9
   spawnEnemy(hero.x, hero.y)
   -- game state
   lost = 0
@@ -52,6 +52,8 @@ function love.load()
   deathTime = 0
   rightDeadBug = love.graphics.newImage("Images/antDeath.png")
   leftDeadBug = love.graphics.newImage("Images/antDeath2.png")
+  -- the game level
+  gameLevel = 1
 end
 
 function love.keypressed(key)
@@ -190,9 +192,10 @@ end
     end
  end 
  
-  --spawn more enemies when all 8 are gone
+  --spawn more enemies when all enemies are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
+    gameLevel = gameLevel + 1
   end 
 end
 
@@ -226,11 +229,16 @@ function love.draw()
 --  love.graphics.print(hero.nose.x,600,200)
 --  love.graphics.print("nose Y : ",500,225)
 --  love.graphics.print(hero.nose.y,600,225)
+
+  -- draw the Game's level
+  love.graphics.print("Level : ", 500, 200)
+  love.graphics.print(gameLevel, 600, 200)
   
   -- draw the hero's score
-  love.graphics.print("Score : ", 500, 200)
-  love.graphics.print(hero.score, 600, 200)
+  love.graphics.print("Score : ", 500, 225)
+  love.graphics.print(hero.score, 600, 225)
   
+  -- draw the enemy count
   love.graphics.print("Enemy Count : ", 500, 250)
   love.graphics.print(enemyCount, 600, 250)
   
