@@ -165,17 +165,8 @@ function love.update(dt)
    	table.remove(hero.shots, v)
   end 
   
-  -- update those enemies
-  for i,v in ipairs(enemies) do
-    -- make the enemies follow the hero
-    distX =  hero.x - v.x
-    distY =  hero.y - v.y
-    distance = math.sqrt(distX*distX+distY*distY)
-    enemyVelocityX = distX/distance*10
-    enemyVelocityY = distY/distance*10
-    v.x = v.x + enemyVelocityX*dt*1.5
-    v.y = v.y + enemyVelocityY*dt*1.5
-  end
+  -- update enemies position
+  moveEnemy(dt)
 
   -- checks if you lose
   for i,v in ipairs(enemies) do
@@ -292,6 +283,51 @@ function moveHero(dt)
   inBounds()
 end
 
+function moveEnemy(dt)
+  for i,v in ipairs(enemies) do
+    -- update enemys velocity to follow hero
+    distX =  hero.x - v.x
+    distY =  hero.y - v.y
+    distance = math.sqrt(distX*distX+distY*distY)
+    enemyNewVelocityX = distX/distance*10
+    enemyNewVelocityY = distY/distance*10
+    
+    -- calculate enemy's old and new velocity
+    enemyNewVelocityMag = math.sqrt(enemyNewVelocityX * enemyNewVelocityX
+      + enemyNewVelocityY*enemyNewVelocityY)
+    enemyOldVelocityMag = math.sqrt(v.velocityX * v.velocityX 
+      + v.velocityY*v.velocityY)
+    
+    -- change enemy's momentum: same velocity = speed up / diff velocity = slow down
+    if (enemyNewVelocityMag == enemyOldVelocityMag) then
+      v.momentum = v.momentum + .1
+    else
+      if (distance > 500) then
+        v.momentum = v.momentum + .1
+      else
+      v.momentum = v.momentum - .2
+      end
+    end
+    
+    
+    -- update old velocity to new velocity
+    v.velocityX = enemyNewVelocityX
+    v.velocityY = enemyNewVelocityY
+    
+    
+    -- momentum limit
+    if (v.momentum <= 1.5) then
+      v.momentum = 1.5
+    elseif (v.momentum >= 10) then
+      v.momentum = 10
+    end
+    
+    -- update enemy's position
+    v.x = v.x + v.velocityX*dt*v.momentum
+    v.y = v.y + v.velocityY*dt*v.momentum
+  end
+end
+
 -- checks to see if rocket went out of bound
 function inBounds ()
     -- restricts hero's movement to inside the screen
@@ -357,6 +393,9 @@ function spawnEnemy(heroX, heroY)
 		enemy.height = 50
     enemy.x = 0;
     enemy.y = 0;
+    enemy.velocityX = 10
+    enemy.velocityY = 10
+    enemy.momentum = 1.5;
     enemy.img = love.graphics.newImage("Images/ant.png")
     local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
