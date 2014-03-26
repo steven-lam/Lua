@@ -43,6 +43,7 @@ function love.load()
   bgState = true
   -- thruster's audio
   thrusters = love.audio.newSource("Sounds/thrusters.wav")
+  thrusters:setVolume(.5)
   -- fullscreen state
   fsState = true
 end
@@ -253,7 +254,8 @@ function love.draw()
 end
 
 function moveHero(dt) 
-  forward = love.keyboard.isDown("w")
+  speedUp = love.keyboard.isDown("w")
+  slowDown = love.keyboard.isDown("s")
   
   -- momentum limit
   if(hero.momentum >= 15) then
@@ -270,9 +272,12 @@ function moveHero(dt)
   hero.x = hero.x + hero.velocityX*dt*hero.momentum
   hero.y = hero.y + hero.velocityY*dt*hero.momentum
   
-  if(forward) then
+  if(speedUp) then
     love.audio.play(thrusters)
     hero.momentum = hero.momentum + .1
+  elseif (slowDown) then
+    love.audio.play(thrusters)
+    hero.momentum = hero.momentum - .2
   else 
     hero.momentum = hero.momentum - .1
     love.audio.stop(thrusters)
