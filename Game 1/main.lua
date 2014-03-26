@@ -93,7 +93,7 @@ function love.keypressed(key)
 end
 
 
-function love.update(dt)
+function love.update(dt) 
   -- clears the enemy's after image 
   deathsClear()
 
@@ -290,10 +290,6 @@ function moveHero(dt)
     hero.momentum = 0
   end
   
-  -- updates hero's movement based on the direction he is facing
-  hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-  hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-  
   -- keyboard actions for the hero
   hero.x = hero.x + hero.velocityX*dt*hero.momentum
   hero.y = hero.y + hero.velocityY*dt*hero.momentum
@@ -304,6 +300,9 @@ function moveHero(dt)
     love.audio.play(thrusters)
     hero.img = love.graphics.newImage("Images/rocketIgnition.png")
     hero.momentum = hero.momentum + .1
+    -- updates hero's movement based on the direction he is facing
+    hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+    hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   elseif (slowDown) then
     love.audio.play(thrusters)
     hero.img = love.graphics.newImage("Images/rocketIgnition.png")
