@@ -28,6 +28,7 @@ function love.load()
   -- enemy table, count, and creates enemy
 	enemies = {}
   enemyCount = 0;
+  enemyID = 0;
   spawnEnemy(hero.x, hero.y)
   -- game state
   lost = 0
@@ -100,15 +101,6 @@ function love.update(dt)
   hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
   hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   
---  if enemyCount == nil then
---    spawnEnemy(hero.x, hero.y)
---  end
-  
-  --spawn more enemies when all 8 are gone
-	if next (enemies) == nil then	
-    spawnEnemy(hero.x, hero.y)
-  end 
-  
 	-- shoot detection
 	local remEnemy = {}
 	local remShot = {}
@@ -122,13 +114,9 @@ function love.update(dt)
 	--end 
 
 		--mark shots that are not visible for removal
-		if v.y < 0 then
+		if (v.y < 0 or v.x < 0) then
 			table.insert(remShot, i)
-    elseif v.y > love.window.getHeight() then
-      table.insert(remShot, i)
-    elseif v.x < 0 then
-      table.insert(remShot, i)
-    elseif v.x > love.window.getWidth() then
+    elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
       table.insert(remShot, i)
 		end
 
@@ -136,7 +124,7 @@ function love.update(dt)
 		for ii,vv in ipairs(enemies) do
 			if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
 				-- mark that enemy for removal
-				table.insert(remEnemy, ii)
+				table.insert(remEnemy, vv.rank)
 				-- mark the shot to be removed
 				table.insert(remShot, i)
         hero.score = hero.score + 1
@@ -146,11 +134,17 @@ function love.update(dt)
   
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
-   	table.remove(enemies, v)
-      -- bug's death audio
-    deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
-    enemyCount = enemyCount - 1;
-    love.audio.play(deadBugSFX)
+   	for ii,vv in ipairs(enemies) do
+      if(v == vv.rank) then
+        table.remove(enemies,ii)
+        -- bug's death audio
+        deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
+        enemyCount = enemyCount - 1;
+        love.audio.play(deadBugSFX)
+        -- reduce enemyID by 1 because one enemy is gone
+        enemyID = enemyID - 1
+      end
+    end
   end 
  
   -- remove the shots that need to be removed
@@ -176,6 +170,11 @@ function love.update(dt)
       lost = 1
     end
  end 
+ 
+  --spawn more enemies when all 8 are gone
+	if next (enemies) == nil then	
+    spawnEnemy(hero.x, hero.y)
+  end 
 end
 
 function love.draw()
@@ -303,13 +302,6 @@ function shoot ()
   love.audio.play(fire)
 end
 
---function checkLocation (heroX, heroY, enemyX, enemyY)
---	leftX  = heroX - 50
---	rightX = heroX + 50
---	topY   = heroY - 50
---	bottomY = heroY + 50
---end
-
 -- checking collision
 function checkCollision(ax1,ay1,aw,ah, bx1,by1,bw,bh)
 	local ax2,ay2,bx2,by2 = ax1 + aw, ay1 + ah, bx1 + bw, by1 + bh 
@@ -359,8 +351,12 @@ function spawnEnemy(heroX, heroY)
     end
     if(not repeatedEnemy) then
     -- enemy is built, insert to enemies table
+    -- give each enemy an ID
+    enemy.rank = enemyID
     table.insert(enemies, enemy)
     enemyCount = enemyCount + 1;
+    -- increment the ID for the next enemy
+    enemyID = enemyID + 1;
     end
 	end
 end
