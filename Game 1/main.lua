@@ -94,6 +94,7 @@ end
 
 
 function love.update(dt)
+  -- timer to give enemy's death an animation
   if(deathTime == 10) then
     deathsClear()
   else
@@ -192,11 +193,16 @@ end
     end
  end 
  
-  --spawn more enemies when all enemies are gone
+  -- spawn more enemies when all enemies are gone
 	if next (enemies) == nil then	
     spawnEnemy(hero.x, hero.y)
     gameLevel = gameLevel + 1
   end 
+  
+  -- replays background if it completed
+  if(not bgMusic:isPlaying() and bgState) then
+    love.audio.play(bgMusic)
+  end
 end
 
 function love.draw()
