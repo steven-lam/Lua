@@ -94,12 +94,9 @@ end
 
 
 function love.update(dt)
-  -- timer to give enemy's death an animation
-  if(deathTime == 10) then
-    deathsClear()
-  else
-    deathTime = deathTime + .5
-  end
+  -- clears the enemy's after image 
+  deathsClear()
+
   -- Fixes the direction the enemy's face
   enemyImageCheck()
  
@@ -166,7 +163,12 @@ end
   for i,v in ipairs(remEnemy) do 
    	for ii,vv in ipairs(enemies) do
       if(v == vv.rank) then
-        table.insert(enemyDeaths,vv)
+        -- add enemy being deleted to enemyDeaths 
+        -- for after image
+        local enemy = vv
+        enemy.tick = 0
+        table.insert(enemyDeaths,enemy)
+        -- remove enemy from enemy's who are still alive
         table.remove(enemies,ii)
         -- bug's death audio
         deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
@@ -342,11 +344,9 @@ function moveEnemy(dt)
       end
     end
     
-    
     -- update old velocity to new velocity
     v.velocityX = enemyNewVelocityX
     v.velocityY = enemyNewVelocityY
-    
     
     -- momentum limit
     if (v.momentum <= 1.5) then
@@ -487,10 +487,13 @@ function enemyImageCheck()
   end 
 end
 
--- clears enemy's deaths
+-- clears enemy's deaths after 20 frames
 function deathsClear()
-  deathTime = 0
-  for i in pairs (enemyDeaths) do
-    enemyDeaths[i] = nil
+  for i,v in ipairs (enemyDeaths) do
+    if(v.tick == 20) then
+      table.remove(enemyDeaths,i)
+    else
+      v.tick = v.tick+1
+    end
   end
 end
