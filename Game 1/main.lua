@@ -272,14 +272,19 @@ function moveHero(dt)
   hero.x = hero.x + hero.velocityX*dt*hero.momentum
   hero.y = hero.y + hero.velocityY*dt*hero.momentum
   
+  -- plays thrusters audio if hero moves and changes image
+  -- if not, slow hero down and changeg image to w/o thrusters
   if(speedUp) then
     love.audio.play(thrusters)
+    hero.img = love.graphics.newImage("Images/rocketIgnition.png")
     hero.momentum = hero.momentum + .1
   elseif (slowDown) then
     love.audio.play(thrusters)
+    hero.img = love.graphics.newImage("Images/rocketIgnition.png")
     hero.momentum = hero.momentum - .2
   else 
     hero.momentum = hero.momentum - .1
+    hero.img = love.graphics.newImage("Images/rocket.png")
     love.audio.stop(thrusters)
   end
   -- verify that the rocket is in bounds
