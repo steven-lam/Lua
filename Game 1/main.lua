@@ -317,7 +317,7 @@ function spawnEnemy(heroX, heroY)
   local right = love.window.getWidth()
   
   -- Creates 7 enemy
-  for i=0,7 do 
+  while (table.getn(enemies) <= 7) do 
     local repeatedEnemy = false
     local enemy = {}
 		enemy.width = 50
@@ -327,6 +327,7 @@ function spawnEnemy(heroX, heroY)
     enemy.img = love.graphics.newImage("Images/ant.png")
     local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
+    
     if (quadrant == 1) then
       enemy.x = math.random(enemy.width, heroX - heroRadius - enemy.width + 1)  -- plus one because of last pixel is excluded
       enemy.y = math.random(enemy.height, love.window.getHeight() - enemy.height + 1)
@@ -344,20 +345,22 @@ function spawnEnemy(heroX, heroY)
     
     for j,v in ipairs(enemies) do
       if (v.x == enemy.x and v.y == enemy.y) then
-        i = i-1
-        repeatedEnemy = true;
+        repeatedEnemy = true
         break
       end
     end
+    
     if(not repeatedEnemy) then
-    -- enemy is built, insert to enemies table
-    -- give each enemy an ID
-    enemy.rank = enemyID
-    table.insert(enemies, enemy)
-    enemyCount = enemyCount + 1;
-    -- increment the ID for the next enemy
-    enemyID = enemyID + 1;
-    end
+     -- enemy is built, insert to enemies table
+     -- give each enemy an ID
+     enemy.rank = enemyID
+     enemy.x = enemy.x
+     enemy.y = enemy.y
+     table.insert(enemies, enemy)
+     enemyCount = enemyCount + 1;
+     -- increment the ID for the next enemy
+     enemyID = enemyID + 1;
+     end
 	end
 end
 
