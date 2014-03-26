@@ -221,8 +221,8 @@ function love.draw()
 --  love.graphics.print(hero.nose.y,600,225)
   
   -- draw the hero's score
-  love.graphics.print("Score : ",350,10)
-  love.graphics.print(hero.score,450,10)
+  love.graphics.print("Score : ", 500, 200)
+  love.graphics.print(hero.score, 600, 200)
   
   love.graphics.print("Enemy Count : ", 500, 250)
   love.graphics.print(enemyCount, 600, 250)
