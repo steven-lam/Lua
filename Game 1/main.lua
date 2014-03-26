@@ -30,6 +30,7 @@ function love.load()
 	enemies = {}
   enemyCount = 0;
   enemyID = 0;
+  maxEnemy = 8
   spawnEnemy(hero.x, hero.y)
   -- game state
   lost = 0
@@ -403,8 +404,8 @@ function spawnEnemy(heroX, heroY)
   local left = 0
   local right = love.window.getWidth()
   
-  -- Creates 7 enemy
-  while (table.getn(enemies) <= 7) do 
+  -- Creates enemies
+  while (table.getn(enemies) <= maxEnemy) do 
     local repeatedEnemy = false
     local enemy = {}
 		enemy.width = 50
@@ -452,6 +453,7 @@ function spawnEnemy(heroX, heroY)
      enemyID = enemyID + 1;
      end
 	end
+  maxEnemy = maxEnemy + 2
 end
 
 -- fixes enemy's image
