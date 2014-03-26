@@ -46,6 +46,11 @@ function love.load()
   thrusters:setVolume(.5)
   -- fullscreen state
   fsState = true
+  -- dead bugs table used to draw
+  enemyDeaths = {}
+  deathTime = 0
+  rightDeadBug = love.graphics.newImage("Images/antDeath.png")
+  leftDeadBug = love.graphics.newImage("Images/antDeath2.png")
 end
 
 function love.keypressed(key)
@@ -86,6 +91,11 @@ end
 
 
 function love.update(dt)
+  if(deathTime == 10) then
+    deathsClear()
+  else
+    deathTime = deathTime + .5
+  end
   -- Fixes the direction the enemy's face
   enemyImageCheck()
  
@@ -123,32 +133,36 @@ function love.update(dt)
   -- update the shots new location
   v.x = v.x + v.velocityx * dt * 25
   v.y = v.y + v.velocityy * dt * 25
+  
+	--mark shots that are not visible for removal
+	if (v.y < 0 or v.x < 0) then
+		table.insert(remShot, i)
+  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
+     table.insert(remShot, i)
+	end
 
-	--end 
-
-		--mark shots that are not visible for removal
-		if (v.y < 0 or v.x < 0) then
+	-- check for collision with enemies
+  for ii,vv in ipairs(enemies) do
+		if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
+      if (vv.img == rightFace) then
+        vv.img = rightDeadBug
+      else
+        vv.img = leftDeadBug
+      end
+			-- mark that enemy for removal
+			table.insert(remEnemy, vv.rank)
+			-- mark the shot to be removed
 			table.insert(remShot, i)
-    elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
-      table.insert(remShot, i)
-		end
-
-		-- check for collision with enemies
-		for ii,vv in ipairs(enemies) do
-			if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
-				-- mark that enemy for removal
-				table.insert(remEnemy, vv.rank)
-				-- mark the shot to be removed
-				table.insert(remShot, i)
-        hero.score = hero.score + 1
-			end
+       hero.score = hero.score + 1
 		end
 	end
+end
   
 	-- remove the marked enemies
   for i,v in ipairs(remEnemy) do 
    	for ii,vv in ipairs(enemies) do
       if(v == vv.rank) then
+        table.insert(enemyDeaths,vv)
         table.remove(enemies,ii)
         -- bug's death audio
         deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
@@ -182,7 +196,6 @@ function love.update(dt)
 end
 
 function love.draw()
-	local value = rotation
   -- draws background
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(background)
@@ -231,7 +244,12 @@ function love.draw()
     love.graphics.draw(v.img, v.x, v.y)
 		--love.graphics.rectangle("fill", v.x, v.y, v.width, v.height)
   end
-
+  
+  -- dead enemies
+  for i,v in ipairs(enemyDeaths) do
+    love.graphics.draw(v.img, v.x, v.y)
+		--love.graphics.rectangle("fill", v.x, v.y, v.width, v.height)
+  end
 	-- shots
   love.graphics.setColor(255,0,0)
 	for i,v in ipairs(hero.shots) do 
@@ -451,4 +469,12 @@ function enemyImageCheck()
       v.img = rightFace
     end
   end 
+end
+
+-- clears enemy's deaths
+function deathsClear()
+  deathTime = 0
+  for i in pairs (enemyDeaths) do
+    enemyDeaths[i] = nil
+  end
 end
