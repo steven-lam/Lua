@@ -42,6 +42,8 @@ function love.load()
   bgState = true
   -- thruster's audio
   thrusters = love.audio.newSource("Sounds/thrusters.wav")
+  -- fullscreen state
+  fsState = true
 end
 
 function love.keypressed(key)
@@ -68,6 +70,15 @@ function love.keypressed(key)
       love.audio.resume(bgMusic)
     end
     bgState = not bgState
+  end
+  
+  if(key == "m") then
+    if(fsState) then
+      love.window.setFullscreen(true)
+    else
+      love.window.setFullscreen(false)
+    end
+    fsState = not fsState
   end
 end
 
