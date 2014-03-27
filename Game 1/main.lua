@@ -46,7 +46,7 @@ function love.load()
   thrusters = love.audio.newSource("Sounds/thrusters.wav")
   thrusters:setVolume(.5)
   -- fullscreen state
-  fsState = true
+  fsState = false
   -- dead bugs table used to draw
   enemyDeaths = {}
   deathTime = 0
@@ -83,12 +83,16 @@ function love.keypressed(key)
   end
   
   if(key == "m") then
+    fsState = not fsState
     if(fsState) then
       love.window.setFullscreen(true)
     else
       love.window.setFullscreen(false)
     end
-    fsState = not fsState
+  end
+
+  if(key == "escape") then
+    love.window.setFullscreen(false)
   end
 end
 
