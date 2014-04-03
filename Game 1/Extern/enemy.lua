@@ -1,8 +1,12 @@
 -- Creates a table of enemies
-enemies = {}
-enemyCount = 0; -- enemy counter
-enemyID = 0;    -- assigns each enemy a unique id
-maxEnemy = 9    -- max enemy count for level
+  enemies = {}
+  enemyCount = 0; -- enemy counter
+  enemyID = 0;    -- assigns each enemy a unique id
+  maxEnemy = 9    -- max enemy count for level
+
+-- bug's right and left image
+  rightFace = love.graphics.newImage("Images/ant.png") 
+  leftFace = love.graphics.newImage("Images/ant2.png")
   
   
 -- enemy spawning function that takes in hero's location

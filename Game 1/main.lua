@@ -1,32 +1,15 @@
 function love.load()
-  -- title of game
-  love.window.setTitle("SpaceBugs")
-  -- icon for game
-  icon = love.image.newImageData("Images/ant.png")
-  love.window.setIcon(icon)
-  -- background's image
-	background = love.graphics.newImage("Images/background.png")
-  -- bug's right and left image
-  rightFace = love.graphics.newImage("Images/ant.png") 
-  leftFace = love.graphics.newImage("Images/ant2.png")
   -- hero
   require("Extern/hero")
-  -- hero
+  -- enemy
   require("Extern/enemy")
+  -- window functions
+  require("Extern/window")
   spawnEnemy(hero.x, hero.y)
+  -- audio
+  require("Extern/audio")
   -- game state
   lost = 0
-  -- rotation values for hero's rotation
-  rotation = 0
-  rotationValue = 0
-  newRotation = 0
-  -- background's audio
-  bgMusic = love.audio.newSource("Sounds/Requiem for a Dream.mp3")
-  love.audio.play(bgMusic)
-  bgState = true
-  -- thruster's audio
-  thrusters = love.audio.newSource("Sounds/thrusters.wav")
-  thrusters:setVolume(.5)
   -- fullscreen state
   fsState = false
   -- dead bugs table used to draw
@@ -34,8 +17,6 @@ function love.load()
   deathTime = 0
   rightDeadBug = love.graphics.newImage("Images/antDeath.png")
   leftDeadBug = love.graphics.newImage("Images/antDeath2.png")
-  -- the game level
-  gameLevel = 1
 end
 
 function love.keypressed(key)
@@ -83,96 +64,16 @@ function love.update(dt)
   moveHero(dt)
   
   -- Rotates the hero's image
-  if (love.keyboard.isDown("left") and love.keyboard.isDown("right")) then
-      rotation = rotation;
-  elseif (love.keyboard.isDown("right")) then
-      rotation =  rotation + math.pi 
-  elseif (love.keyboard.isDown("left")) then
-      rotation = rotation - math.pi 
-  end
+  hero.rotationUpdate()
   
-  -- Have to continuously update the nose
-  -- Keeps the bounds for angle from 0-360
-  if (rotation < 0) then
-    rotation = (math.abs(rotation))
-    newRotation = -1 * rotation % 360
-    rotation = -1 * rotation
-  else
-    newRotation = rotation % 360
-  end
-  
-  hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
-  hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-  
-	-- shoot detection
-	local remEnemy = {}
-	local remShot = {}
-  
-	-- update shots
-	for i,v in ipairs(hero.shots) do
-  -- update the shots new location
-  v.x = v.x + v.velocityx * dt * 25
-  v.y = v.y + v.velocityy * dt * 25
-  
-	--mark shots that are not visible for removal
-	if (v.y < 0 or v.x < 0) then
-		table.insert(remShot, i)
-  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
-     table.insert(remShot, i)
-	end
-
-	-- check for collision with enemies
-  for ii,vv in ipairs(enemies) do
-		if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
-      if (vv.img == rightFace) then
-        vv.img = rightDeadBug
-      else
-        vv.img = leftDeadBug
-      end
-			-- mark that enemy for removal
-			table.insert(remEnemy, vv.rank)
-			-- mark the shot to be removed
-			table.insert(remShot, i)
-       hero.score = hero.score + 1
-		end
-	end
-end
-  
-	-- remove the marked enemies
-  for i,v in ipairs(remEnemy) do 
-   	for ii,vv in ipairs(enemies) do
-      if(v == vv.rank) then
-        -- add enemy being deleted to enemyDeaths 
-        -- for after image
-        local enemy = vv
-        enemy.tick = 0
-        table.insert(enemyDeaths,enemy)
-        -- remove enemy from enemy's who are still alive
-        table.remove(enemies,ii)
-        -- bug's death audio
-        deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
-        enemyCount = enemyCount - 1;
-        love.audio.play(deadBugSFX)
-        -- reduce enemyID by 1 because one enemy is gone
-        enemyID = enemyID - 1
-      end
-    end
-  end 
- 
-  -- remove the shots that need to be removed
-  for i,v in ipairs(remShot) do 
-   	table.remove(hero.shots, v)
-  end 
+	-- Checks for shots' collision
+  shootDetection(dt)
   
   -- update enemies position
   moveEnemy(dt)
 
   -- if rocket touches enemy then rocket loses health
-  for i,v in ipairs(enemies) do
-    if checkCollision(v.x,v.y,v.width,v.height, hero.x ,hero.y ,hero.width,hero.height) then 
-      heroDamage()
-    end
- end 
+  heroDamage()
  
   -- spawn more enemies when all enemies are gone
 	if next (enemies) == nil then	
@@ -185,6 +86,7 @@ end
     love.audio.play(bgMusic)
   end
   
+  -- checks to see if game is over
   if(hero.health < 0) then
     hero.health = 0
     lost = 1
@@ -269,51 +171,64 @@ function love.draw()
   end
 end
 
--- checks to see if rocket went out of bound
-function inBounds ()
-    -- restricts hero's movement to inside the screen
-  if (hero.x < 0) then -- if hero moves pass left border
-    hero.x = 0
-  elseif (hero.x > (love.window.getWidth() - hero.width)) then -- if hero moves pass right border
-    hero.x = love.window.getWidth() - hero.width
-  elseif (hero.y < 0) then -- if hero moves above top border
-    hero.y = 0
-  elseif (hero.y > (love.window.getHeight() - hero.height)) then -- if hero moves below bottom border
-    hero.y = love.window.getHeight() - hero.height
-  end
-end
+function shootDetection(dt)
+-- shoot detection
+	local remEnemy = {}
+	local remShot = {}
+  
+	-- update shots
+	for i,v in ipairs(hero.shots) do
+  -- update the shots new location
+  v.x = v.x + v.velocityx * dt * 25
+  v.y = v.y + v.velocityy * dt * 25
+  
+	--mark shots that are not visible for removal
+	if (v.y < 0 or v.x < 0) then
+		table.insert(remShot, i)
+  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
+     table.insert(remShot, i)
+	end
 
--- checks if the user went out the window in a corner
-function cornerCheck()
-  if(hero.x < 0 and hero.y < 0) then
-    hero.x = 0
-    hero.y = 0
-  elseif (hero.x < 0 and hero.y > love.window.getHeight() - hero.height) then
-    hero.x = 0
-    hero.y = love.window.getHeight() - hero.height
-  elseif (hero.x > love.window.getWidth() - hero.width and hero.y < 0) then
-    hero.x = love.window.getWidth() - hero.width
-    hero.y = 0
-  elseif (hero.x > love.window.getWidth() - hero.width and hero.y > love.window.getHeight() - hero.height) then
-    hero.x = love.window.getWidth() - hero.width
-    hero.y = love.window.getHeight() - hero.height
-  end
+	-- check for collision with enemies
+  for ii,vv in ipairs(enemies) do
+		if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
+      if (vv.img == rightFace) then
+        vv.img = rightDeadBug
+      else
+        vv.img = leftDeadBug
+      end
+			-- mark that enemy for removal
+			table.insert(remEnemy, vv.rank)
+			-- mark the shot to be removed
+			table.insert(remShot, i)
+       hero.score = hero.score + 1
+		end
+	end
 end
-
--- the firing functions
-function shoot ()
-  fire = love.audio.newSource("Sounds/ShotsSFX.mp3")
-	local shot = {}
-	shot.x = hero.nose.x + hero.img:getWidth() / 2;
-	shot.y = hero.nose.y + hero.img:getHeight() / 2;
-  shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-  shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-	table.insert(hero.shots,shot)
-  love.audio.play(fire)
-end
-
--- checking collision
-function checkCollision(ax1,ay1,aw,ah, bx1,by1,bw,bh)
-	local ax2,ay2,bx2,by2 = ax1 + aw, ay1 + ah, bx1 + bw, by1 + bh 
-	return ax1 < bx2 and ax2 > bx1 and ay1 < by2 and ay2 > by1
+  
+	-- remove the marked enemies
+  for i,v in ipairs(remEnemy) do 
+   	for ii,vv in ipairs(enemies) do
+      if(v == vv.rank) then
+        -- add enemy being deleted to enemyDeaths 
+        -- for after image
+        local enemy = vv
+        enemy.tick = 0
+        table.insert(enemyDeaths,enemy)
+        -- remove enemy from enemy's who are still alive
+        table.remove(enemies,ii)
+        -- bug's death audio
+        deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
+        enemyCount = enemyCount - 1;
+        love.audio.play(deadBugSFX)
+        -- reduce enemyID by 1 because one enemy is gone
+        enemyID = enemyID - 1
+      end
+    end
+  end 
+ 
+  -- remove the shots that need to be removed
+  for i,v in ipairs(remShot) do 
+   	table.remove(hero.shots, v)
+  end 
 end
