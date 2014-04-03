@@ -73,6 +73,7 @@ function love.keypressed(key)
   -- if space is pressed
   if(key == "r") then
     lost = 0
+    hero.health = 100
   end
   
   if(key == "t") then
@@ -219,9 +220,30 @@ end
 end
 
 function love.draw()
+  
   -- draws background
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.draw(background)
+  
+  -- draw the rocket's health bar
+  -- draw the description
+  love.graphics.print("Rocket's Health : ", 500, 130)
+  -- drawing white outline
+  -- love.graphics.setColor(255,255,255)
+  -- love.graphics.rectangle("fill", 497, 147, 106,16)
+  -- drawing the health color
+  if(hero.health >= 70 ) then
+    love.graphics.setColor(0,255,0)
+  end
+  if(hero.health < 70 and hero.health >= 30) then
+    love.graphics.setColor(255,102,0)
+  end
+  if(hero.health < 30 and hero.health > 0) then
+     love.graphics.setColor(255,0,0)
+  end
+  love.graphics.rectangle("fill", 500, 150, hero.health,10)
+  -- draw the current health to player / match current health's color
+  love.graphics.print(hero.health, 610, 130)
   
   -- prints that the user lost
   if (lost == 1) then
@@ -248,7 +270,8 @@ function love.draw()
 --  love.graphics.print(hero.nose.x,600,200)
 --  love.graphics.print("nose Y : ",500,225)
 --  love.graphics.print(hero.nose.y,600,225)
-
+  
+  love.graphics.setColor(255,255,255,255)
   love.graphics.rectangle("line",hero.x ,hero.y ,hero.width,hero.height/2)
 
   -- draw the Game's level
@@ -257,7 +280,7 @@ function love.draw()
   
   -- draw the hero's score
   love.graphics.print("Score : ", 500, 225)
-  love.graphics.print(hero.health, 600, 225)
+  love.graphics.print(hero.score, 600, 225)
   
   -- draw the enemy count
   love.graphics.print("Enemy Count : ", 500, 250)
@@ -290,24 +313,6 @@ function love.draw()
   love.graphics.rectangle("fill", v.x, v.y, 2,2)
   --end
   end
-
-  -- draw the rocket's health bar
-  -- draw the description
-  love.graphics.print("Rocket's Health : ", 500, 130)
-  -- drawing white outline
-  love.graphics.setColor(255,255,255)
-  love.graphics.rectangle("fill", 497, 147, 106,16)
-  -- drawing the health color
-  if(hero.health >= 70 ) then
-    love.graphics.setColor(0,255,0)
-  end
-  if(hero.health < 70 and hero.health >= 30) then
-    love.graphics.setColor(255,102,0)
-  end
-  if(hero.health < 30 and hero.health > 0) then
-     love.graphics.setColor(255,0,0)
-  end
-  love.graphics.rectangle("fill", 500, 150, hero.health,10)
 end
 
 function moveHero(dt) 
@@ -531,8 +536,8 @@ end
 -- reduces rocket's health after 20 frames
 function heroDamage()
   hero.health_frame = hero.health_frame + 1
-  if(hero.health_frame == 20) then
-    hero.health = hero.health - 3;
+  if(hero.health_frame == 10) then
+    hero.health = hero.health - 1;
     hero.health_frame = 0
   end
 end
