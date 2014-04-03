@@ -1,5 +1,7 @@
+hero = {}
+
+function hero.init()
 -- hero's table and stats
-  hero = {}
   hero.img = love.graphics.newImage("Images/rocket.png")
   hero.x = 300
   hero.y = 450
@@ -22,6 +24,7 @@
   rotation = 0
   rotationValue = 0
   newRotation = 0
+end
   
   -- Hero's movements
 function moveHero(dt) 

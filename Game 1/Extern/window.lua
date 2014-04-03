@@ -1,3 +1,6 @@
+window = {}
+
+function window.init()
 -- title of game
   love.window.setTitle("SpaceBugs")
 -- icon for game
@@ -5,8 +8,9 @@
   love.window.setIcon(icon)
 -- background's image
   background = love.graphics.newImage("Images/background.png")
--- the initial level
-  gameLevel = 1
+-- fullscreen state
+  fsState = false
+end
 
 -- checks to see if rocket went out of bound
 function inBounds ()

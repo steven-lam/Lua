@@ -1,13 +1,18 @@
--- Creates a table of enemies
+enemy = {}
+function enemy.init() 
+  -- Creates a table of enemies
   enemies = {}
   enemyCount = 0; -- enemy counter
   enemyID = 0;    -- assigns each enemy a unique id
   maxEnemy = 9    -- max enemy count for level
 
--- bug's right and left image
+  -- bug's right and left image
   rightFace = love.graphics.newImage("Images/ant.png") 
   leftFace = love.graphics.newImage("Images/ant2.png")
   
+  -- spawns a new set of enemies
+  spawnEnemy(hero.x, hero.y)
+end
   
 -- enemy spawning function that takes in hero's location
 function spawnEnemy(heroX, heroY)
@@ -92,7 +97,7 @@ function moveEnemy(dt)
       if (distance > 500) then
         v.momentum = v.momentum + .1
       else
-      v.momentum = v.momentum - .2
+        v.momentum = v.momentum - .2
       end
     end
     
@@ -103,8 +108,8 @@ function moveEnemy(dt)
     -- momentum limit
     if (v.momentum <= 1.5) then
       v.momentum = 1.5
-    elseif (v.momentum >= 10) then
-      v.momentum = 10
+    elseif (v.momentum >= 8) then
+      v.momentum = 8
     end
     
     -- update enemy's position
