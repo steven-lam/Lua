@@ -283,13 +283,31 @@ function love.draw()
 	-- shots
   love.graphics.setColor(255,0,0)
 	for i,v in ipairs(hero.shots) do 
---		if (v.direction == 0 or v.direction == 1) then 
---		love.graphics.rectangle("fill", v.x, v.y, 2, 5)
---		elseif (v.direction == 2 or v.direction == 3) then 
---		love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
+  --if (v.direction == 0 or v.direction == 1) then 
+  --love.graphics.rectangle("fill", v.x, v.y, 2, 5)
+  --elseif (v.direction == 2 or v.direction == 3) then 
+  --love.graphics.rectangle("fill", v.x, v.y, 5, 2)  
   love.graphics.rectangle("fill", v.x, v.y, 2,2)
---	end
-	end
+  --end
+  end
+
+  -- draw the rocket's health bar
+  -- draw the description
+  love.graphics.print("Rocket's Health : ", 500, 130)
+  -- drawing white outline
+  love.graphics.setColor(255,255,255)
+  love.graphics.rectangle("fill", 497, 147, 106,16)
+  -- drawing the health color
+  if(hero.health >= 70 ) then
+    love.graphics.setColor(0,255,0)
+  end
+  if(hero.health < 70 and hero.health >= 30) then
+    love.graphics.setColor(255,102,0)
+  end
+  if(hero.health < 30 and hero.health > 0) then
+     love.graphics.setColor(255,0,0)
+  end
+  love.graphics.rectangle("fill", 500, 150, hero.health,10)
 end
 
 function moveHero(dt) 
