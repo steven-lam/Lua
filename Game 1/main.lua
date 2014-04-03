@@ -25,6 +25,8 @@ function love.load()
   hero.velocityX = 0
   hero.velocityY = 0
   hero.momentum = 0
+  hero.health = 100
+  hero.health_frame = 0
   heroRadius = 50
   -- enemy table, count, and creates enemy
 	enemies = {}
@@ -192,10 +194,10 @@ end
   -- update enemies position
   moveEnemy(dt)
 
-  -- checks if you lose
+  -- if rocket touches enemy then rocket loses health
   for i,v in ipairs(enemies) do
-    if checkCollision(v.x,v.y,v.width,v.height, hero.x,hero.y,hero.width,hero.height) then 
-      lost = 1
+    if checkCollision(v.x,v.y,v.width,v.height, hero.x ,hero.y ,hero.width,hero.height) then 
+      heroDamage()
     end
  end 
  
@@ -208,6 +210,11 @@ end
   -- replays background if it completed
   if(not bgMusic:isPlaying() and bgState) then
     love.audio.play(bgMusic)
+  end
+  
+  if(hero.health < 0) then
+    hero.health = 0
+    lost = 1
   end
 end
 
@@ -228,7 +235,7 @@ function love.draw()
 --  love.graphics.print("Hero Y: ",500,125)
 --  love.graphics.print(hero.y,600,125)
   
---  -- draw the rotation Value
+--  -- draw the rotation Value+++++++
 --  love.graphics.print("rotation: ",500,150)
 --  love.graphics.print(rotation,600,150)
   
@@ -242,13 +249,15 @@ function love.draw()
 --  love.graphics.print("nose Y : ",500,225)
 --  love.graphics.print(hero.nose.y,600,225)
 
+  love.graphics.rectangle("line",hero.x ,hero.y ,hero.width,hero.height/2)
+
   -- draw the Game's level
   love.graphics.print("Level : ", 500, 200)
   love.graphics.print(gameLevel, 600, 200)
   
   -- draw the hero's score
   love.graphics.print("Score : ", 500, 225)
-  love.graphics.print(hero.score, 600, 225)
+  love.graphics.print(hero.health, 600, 225)
   
   -- draw the enemy count
   love.graphics.print("Enemy Count : ", 500, 250)
@@ -498,5 +507,14 @@ function deathsClear()
     else
       v.tick = v.tick+1
     end
+  end
+end
+
+-- reduces rocket's health after 20 frames
+function heroDamage()
+  hero.health_frame = hero.health_frame + 1
+  if(hero.health_frame == 20) then
+    hero.health = hero.health - 3;
+    hero.health_frame = 0
   end
 end
