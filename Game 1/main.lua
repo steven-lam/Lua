@@ -19,6 +19,7 @@ function love.load()
     leftDeadBug = love.graphics.newImage("Images/antDeath2.png")
   -- start main menu bg music
     love.audio.play(main_menuAudio.music)
+    
 end
 
 function love.keypressed(key)
@@ -47,7 +48,7 @@ function love.keypressed(key)
     end
     
     if(key == "t") then
-      audio:toggle(inGameMusic)
+      audio:toggle(inGameAudio)
     end
     
     if(key == "m") then
@@ -58,23 +59,34 @@ function love.keypressed(key)
         love.window.setFullscreen(false)
       end
     end
-
+    
     if(key == "escape") then
-      love.window.setFullscreen(false)
+      game:pause()
+      audio:toggle(inGameAudio)
     end
+    
   elseif(gameState == "gameover") then
     if(key == " ") then
       game.next()
+    end
+    
+  elseif(gameState == "pause") then
+    if(key == "p") then
+      game:pause()
+      audio:toggle(inGameAudio)
     end
   end
 end
 
 
 function love.update(dt) 
+-- game state: Main Menu
   if(gameState == "main_menu") then
     audio:keepPlaying(main_menuAudio)
+-- game state: Instructions     
   elseif(gameState == "instructions") then
     audio:keepPlaying(instructionAudio)
+-- game state: In Game  
   elseif(gameState == "game") then
     -- clears the enemy's after image 
     deathsClear()
@@ -195,6 +207,10 @@ function love.draw()
     -- prints that the user lost
     love.graphics.print("you lose",375,300)
     love.graphics.print("Press space to return to main menu", 275, 320)
+  -- if Game is paused
+  elseif(gameState == "pause") then
+    love.graphics.setColor(255,255,255)
+    love.graphics.draw(pauseImage)
   end
 end
 

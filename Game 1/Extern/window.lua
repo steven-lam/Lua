@@ -12,6 +12,8 @@ function window.init()
   instruction = love.graphics.newImage("Images/instructions.png")
 -- In game's background image
   background = love.graphics.newImage("Images/background.png")
+-- pause screen's image
+  pauseImage = love.graphics.newImage("Images/pause.png")
 -- fullscreen state
   fsState = false
 end

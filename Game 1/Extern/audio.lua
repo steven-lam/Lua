@@ -21,17 +21,17 @@ audio = {}
   
 -- toggles any song
 function audio:toggle(song)
-   if(song.state) then
-    love.audio.pause(song)
+  if(song.state) then
+    love.audio.pause(song.music)
   else
-    love.audio.resume(song)
+    love.audio.resume(song.music)
   end
   song.state = not song.state
 end
 
 -- keeps playing a song if it stopped
 function audio:keepPlaying(song) 
-  if(not song.music:isPlaying()) then
+  if(song.music:isStopped()) then
     love.audio.play(song.music)
   end
 end

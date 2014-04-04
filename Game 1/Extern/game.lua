@@ -7,6 +7,7 @@ function game.init()
   -- game state
     GameStates = {"main_menu", "instructions", "game", "gameover"}
     curGameState = 1
+    pauseState = false
     gameState = GameStates[1]
 end
   
@@ -17,4 +18,14 @@ function game.next()
     curGameState = 1
   end
   gameState = GameStates[curGameState]
+end
+
+-- pauses the game
+function game:pause()
+  pauseState = not pauseState
+  if(pauseState) then
+    gameState = "pause"
+  else
+    gameState = GameStates[curGameState]
+  end
 end
