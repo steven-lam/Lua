@@ -6,7 +6,11 @@ function window.init()
 -- icon for game
   icon = love.image.newImageData("Images/ant.png")
   love.window.setIcon(icon)
--- background's image
+-- main menu's background image
+  main_menuBG = love.graphics.newImage("Images/main_menu.png")
+-- instruction's image
+  instruction = love.graphics.newImage("Images/instructions.png")
+-- In game's background image
   background = love.graphics.newImage("Images/background.png")
 -- fullscreen state
   fsState = false

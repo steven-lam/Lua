@@ -15,18 +15,26 @@ function love.load()
     game.init()
   -- dead bugs table used to draw
     enemyDeaths = {}
-    deathTime = 0
     rightDeadBug = love.graphics.newImage("Images/antDeath.png")
     leftDeadBug = love.graphics.newImage("Images/antDeath2.png")
+  -- start main menu bg music
+    love.audio.play(main_menuAudio.music)
 end
 
 function love.keypressed(key)
   if(gameState == "main_menu") then
-    if(key == " ") then
+    if(key == "return") then
+      game.next()
+      love.audio.stop(main_menuAudio.music)
+      love.audio.play(instructionAudio.music)
+    end
+  elseif(gameState == "instructions") then
+    if(key == "return") then
       game.next()
       hero.init()
       enemy.init()
-      love.audio.play(bgMusic)
+      love.audio.stop(instructionAudio.music)
+      love.audio.play(inGameAudio.music)
     end
   elseif(gameState == "game") then
     if (key == " ") then
@@ -39,12 +47,7 @@ function love.keypressed(key)
     end
     
     if(key == "t") then
-      if(bgState) then
-        love.audio.pause(bgMusic)
-      else
-        love.audio.resume(bgMusic)
-      end
-      bgState = not bgState
+      audio:toggle(inGameMusic)
     end
     
     if(key == "m") then
@@ -69,6 +72,9 @@ end
 
 function love.update(dt) 
   if(gameState == "main_menu") then
+    audio:keepPlaying(main_menuAudio)
+  elseif(gameState == "instructions") then
+    audio:keepPlaying(instructionAudio)
   elseif(gameState == "game") then
     -- clears the enemy's after image 
     deathsClear()
@@ -98,24 +104,22 @@ function love.update(dt)
     end 
     
     -- replays background if it completed
-    if(not bgMusic:isPlaying() and bgState) then
-      love.audio.play(bgMusic)
-    end
-    
+    audio:keepPlaying(inGameAudio)
     -- checks to see if game is over
     if(hero.health < 0) then
       game.next()
     end
   elseif(gameState == "gameover") then
-    love.audio.stop(bgMusic)
+    love.audio.stop(inGameAudio.music)
   end
 end
 
 function love.draw()
   if (gameState == "main_menu") then
     love.graphics.setColor(255,255,255,255)
-    love.graphics.print("Main Menu", 350, 300)
-    love.graphics.print("Press space to play", 325, 320)
+    love.graphics.draw(main_menuBG)
+  elseif(gameState == "instructions") then
+    love.graphics.draw(instruction)
   elseif (gameState == "game") then
     -- draws background
     love.graphics.setColor(255,255,255,255)
@@ -240,10 +244,9 @@ end
         table.insert(enemyDeaths,enemy)
         -- remove enemy from enemy's who are still alive
         table.remove(enemies,ii)
-        -- bug's death audio
-        deadBugSFX = love.audio.newSource("Sounds/bugDeath.wav")
         enemyCount = enemyCount - 1;
-        love.audio.play(deadBugSFX)
+        -- bug's death audio
+        playDeadBugSFX()
         -- reduce enemyID by 1 because one enemy is gone
         enemyID = enemyID - 1
       end
