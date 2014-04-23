@@ -38,7 +38,7 @@ function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
   for i,v in ipairs(hero.shots) do
     if(shape_a == v.shape or shape_b == v.shape) then
         detected1 = shape_a
-  detected2 = shape_b
+        detected2 = shape_b
     end
   end
   --if(shape_a:collidesWith(hero.shape) and shape_a ~= hero.shape or shape_b:collidesWith(hero.shape) and shape_b ~= hero.shape) then
@@ -153,7 +153,7 @@ end
 
 
 function love.update(dt) 
-            detected = hero.shape
+      detected = hero.shape
       detected1 = hero.shape
       detected2 = hero.shape
     test = false;
@@ -295,26 +295,16 @@ function love.draw()
     love.graphics.draw(pauseImage)
   end
   
-  if next(HC) == not nil then
-    for shape in HC:activeShapes() do
-      shape:draw('fill')
-    end
-  end
-  
   if(test) then
     local x, y = hero.shape:center()
     love.graphics.print(math.floor(x),600,400)
     love.graphics.print(math.floor(y),650,400)
  end
   
-  --hero.shape:draw("fill")
-  
-  love.graphics.print( math.floor(x), 600, 100)
-  love.graphics.print( math.floor(y), 650, 100)
-  
   if(gameState == "game") then
   love.graphics.setColor(255,255,255)
     detected:draw("fill")
+  love.graphics.setColor(0,255,0)
     detected1:draw("fill")
     detected2:draw("fill")
   end
