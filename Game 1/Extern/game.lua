@@ -29,3 +29,7 @@ function game:pause()
     gameState = GameStates[curGameState]
   end
 end
+
+function game:restart() 
+  Collider:clear()
+end

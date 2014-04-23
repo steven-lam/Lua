@@ -143,6 +143,8 @@ function love.keypressed(key)
     
   elseif(gameState == "gameover") then
     if(key == " ") then
+      -- restarts the game values
+      game:restart() 
       game.next()
     end
     
