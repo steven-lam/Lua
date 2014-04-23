@@ -1,10 +1,12 @@
+HC = require("Extern/HardonCollider")
+
 hero = {}
 
 function hero.init()
 -- hero's table and stats
   hero.img = love.graphics.newImage("Images/rocket.png")
-  hero.x = 300
-  hero.y = 450
+  hero.x = 400
+  hero.y = 300
   hero.width = 25
   hero.height = 50
   hero.speed = 150
@@ -19,7 +21,7 @@ function hero.init()
   hero.health = 100
   hero.health_frame = 0
   heroRadius = 50
-
+  
 -- rotation values for hero's rotation
   rotation = 0
   rotationValue = 0
@@ -41,7 +43,7 @@ function moveHero(dt)
   -- keyboard actions for the hero
   hero.x = hero.x + hero.velocityX*dt*hero.momentum
   hero.y = hero.y + hero.velocityY*dt*hero.momentum
-  
+  hero.shape:moveTo(hero.x + hero.width/2, hero.y+hero.height/2)
   -- plays thrusters audio if hero moves and changes image
   -- if not, slow hero down and changeg image to w/o thrusters
   if(speedUp) then
@@ -87,6 +89,7 @@ function hero.rotationUpdate()
   -- Have to continuously update the nose
   hero.nose.x = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.x
   hero.nose.y = hero.y - math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+  hero.shape:setRotation(newRotation * math.pi/180)
 end
 
 -- reduces hero's health after 20 frames
@@ -106,10 +109,11 @@ end
 function shoot ()
   fire = love.audio.newSource("Sounds/ShotsSFX.mp3")
 	local shot = {}
-	shot.x = hero.nose.x + hero.img:getWidth() / 2;
-	shot.y = hero.nose.y + hero.img:getHeight() / 2;
+	shot.x = hero.nose.x + hero.img:getWidth() / 2 
+	shot.y = hero.nose.y + hero.img:getHeight() / 2 + 1
   shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+  shot.shape = Collider:addRectangle(shot.x, shot.y, 2,2);
 	table.insert(hero.shots,shot)
   love.audio.play(fire)
 end
