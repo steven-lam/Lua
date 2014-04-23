@@ -94,15 +94,11 @@ end
 
 -- reduces hero's health after 20 frames
 function heroDamage()
-  for i,v in ipairs(enemies) do
-    if checkCollision(v.x,v.y,v.width,v.height, hero.x ,hero.y ,hero.width,hero.height) then 
-      hero.health_frame = hero.health_frame + 1
-      if(hero.health_frame == 10) then
-        hero.health = hero.health - 1;
-        hero.health_frame = 0
-      end
-    end
-  end 
+  hero.health_frame = hero.health_frame + 1
+  if(hero.health_frame == 10) then
+      hero.health = hero.health - 1;
+      hero.health_frame = 0
+  end
 end
 
 -- the firing functions

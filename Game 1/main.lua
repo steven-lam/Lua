@@ -43,6 +43,8 @@ function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
   end
   --if(shape_a:collidesWith(hero.shape) and shape_a ~= hero.shape or shape_b:collidesWith(hero.shape) and shape_b ~= hero.shape) then
   if(shape_a == hero.shape or shape_b == hero.shape) then
+    -- if rocket touches enemy then rocket loses health
+      heroDamage()
     if(shape_a == hero.shape) then
           print('colliding:', 'hero', shape_b)
           detected = shape_b
@@ -53,6 +55,7 @@ function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
           print('colliding:', 'hero', 'hero')  
           detected = hero.shape
     end
+    
     x = mtv_x;
     y = mtv_y;
     test = true
@@ -153,9 +156,6 @@ end
 
 
 function love.update(dt) 
-      detected = hero.shape
-      detected1 = hero.shape
-      detected2 = hero.shape
     test = false;
 -- game state: Main Menu
   if(gameState == "main_menu") then
@@ -165,6 +165,9 @@ function love.update(dt)
     audio:keepPlaying(instructionAudio)
 -- game state: In Game  
   elseif(gameState == "game") then
+      detected = hero.shape
+      detected1 = hero.shape
+      detected2 = hero.shape
     -- clears the enemy's after image 
     deathsClear()
 
@@ -183,9 +186,6 @@ function love.update(dt)
     -- update enemies position
     moveEnemy(dt)
 
-    -- if rocket touches enemy then rocket loses health
-    heroDamage()
-   
     -- spawn more enemies when all enemies are gone
     if next (enemies) == nil then	
       spawnEnemy(hero.x, hero.y)
