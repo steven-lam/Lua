@@ -11,8 +11,9 @@
 -- Collider
   HC = require("Extern/HardonCollider")
 
-  x = 0;
-  y = 0;
+  x = 0
+  y = 0
+  shotD = false
 function love.load()
   -- setup collider
     Collider = HC(100, on_collision)
@@ -35,13 +36,8 @@ end
 
 -- this is called when two shapes collide
 function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
-  for i,v in ipairs(hero.shots) do
-    if(shape_a == v.shape or shape_b == v.shape) then
-        detected1 = shape_a
-        detected2 = shape_b
-    end
-  end
-  --if(shape_a:collidesWith(hero.shape) and shape_a ~= hero.shape or shape_b:collidesWith(hero.shape) and shape_b ~= hero.shape) then
+
+  -- check if hero collided
   if(shape_a == hero.shape or shape_b == hero.shape) then
     -- if rocket touches enemy then rocket loses health
       heroDamage()
@@ -59,41 +55,66 @@ function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
     x = mtv_x;
     y = mtv_y;
     test = true
---    local remEnemy = {}
---    -- check for collision with enemies
---    for ii,vv in ipairs(enemies) do
---        if (vv.img == rightFace) then
---          vv.img = rightDeadBug
---        else
---          vv.img = leftDeadBug
---        end
---        -- mark that enemy for removal
---        table.insert(remEnemy, vv.rank)
---         hero.score = hero.score + 1
---    end
-    
---    -- remove the marked enemies
---    for i,v in ipairs(remEnemy) do 
---      for ii,vv in ipairs(enemies) do
---        if(v == vv.rank) then
---          -- add enemy being deleted to enemyDeaths 
---          -- for after image
---          local enemy = vv
---          enemy.tick = 0
---          table.insert(enemyDeaths,enemy)
---          -- remove enemy from enemy's who are still alive
---          table.remove(enemies,ii)
---          enemyCount = enemyCount - 1;
---          -- bug's death audio
---          playDeadBugSFX()
---          -- reduce enemyID by 1 because one enemy is gone
---          enemyID = enemyID - 1
---        end
---      end
---    end
-  else
-    return;
   end
+    
+    -- check for shot collision
+    local shot, enemy_rank, enemy_shape;
+    
+    for i,v in ipairs(hero.shots) do
+      if(shape_a == v.shape or shape_b == v.shape) then
+        detected1 = shape_a
+        detected2 = shape_b
+      end
+      if(shape_a == v.shape) then
+        shot = v
+        enemy_shape = shape_b
+        shotD = true
+        --remove shot from collider
+        Collider:remove(shot.shape)
+        table.remove(hero.shots,i)
+        break
+      elseif(shape_b == v.shape) then
+        shot = v
+        enemy_shape = shape_a
+        shotD = true
+        --remove shot from collider
+        Collider:remove(shot.shape)
+        table.remove(hero.shots,i)
+        break
+      end
+    end
+    -- find which enemy is the colliding one
+    for i,v in ipairs(enemies) do
+      if(v.shape == enemy_shape) then
+        enemy_rank = v.rank; -- found the right enemy
+        if (v.img == rightFace) then
+          v.img = rightDeadBug
+        else
+          v.img = leftDeadBug
+        end
+        hero.score = hero.score + 1
+      end
+    end
+    
+    -- remove the marked enemies
+    for i,v in ipairs(enemies) do
+      if(enemy_rank == v.rank) then
+        -- add enemy being deleted to enemyDeaths 
+        -- for after image
+        local enemy = v
+        enemy.tick = 0
+        table.insert(enemyDeaths,enemy)
+        -- remove enemy from enemy's who are still alive
+        table.remove(enemies,i)
+        enemyCount = enemyCount - 1;
+        --remove enemy from collider
+        Collider:remove(enemy_shape)
+        -- bug's death audio
+        playDeadBugSFX()
+        -- reduce enemyID by 1 because one enemy is gone
+        enemyID = enemyID - 1
+      end
+    end
 end
 
 function love.keypressed(key)
@@ -158,6 +179,7 @@ end
 
 
 function love.update(dt) 
+  shotD = false;
     test = false;
 -- game state: Main Menu
   if(gameState == "main_menu") then
@@ -309,6 +331,9 @@ function love.draw()
   love.graphics.setColor(0,255,0)
     detected1:draw("fill")
     detected2:draw("fill")
+    if(shotD) then
+      love.graphics.print("shot collision", 500, 300)
+    end
   end
 end
 
@@ -324,12 +349,12 @@ function shootDetection(dt)
   v.y = v.y + v.velocityy * dt * 25
   v.shape:moveTo(v.x,v.y)
   
---	--mark shots that are not visible for removal
---	if (v.y < 0 or v.x < 0) then
---		table.insert(remShot, i)
---  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
---     table.insert(remShot, i)
---	end
+	--mark shots that are not visible for removal
+	if (v.y < 0 or v.x < 0) then
+		table.insert(remShot, i)
+  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
+     table.insert(remShot, i)
+	end
 
 --	-- check for collision with enemies
 --  for ii,vv in ipairs(enemies) do
