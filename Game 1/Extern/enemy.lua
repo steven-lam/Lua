@@ -1,3 +1,4 @@
+HC = require("Extern/HardonCollider")
 enemy = {}
 function enemy.init() 
   -- Creates a table of enemies
@@ -9,9 +10,7 @@ function enemy.init()
   -- bug's right and left image
   rightFace = love.graphics.newImage("Images/ant.png") 
   leftFace = love.graphics.newImage("Images/ant2.png")
-  
-  -- spawns a new set of enemies
-  spawnEnemy(hero.x, hero.y)
+
 end
   
 -- enemy spawning function that takes in hero's location
@@ -65,6 +64,8 @@ function spawnEnemy(heroX, heroY)
      enemy.rank = enemyID
      enemy.x = enemy.x
      enemy.y = enemy.y
+     -- give the enemy a hitbox
+     enemy.shape = Collider:addRectangle(enemy.x,enemy.y,enemy.width,enemy.height);
      table.insert(enemies, enemy)
      enemyCount = enemyCount + 1;
      -- increment the ID for the next enemy
@@ -115,6 +116,7 @@ function moveEnemy(dt)
     -- update enemy's position
     v.x = v.x + v.velocityX*dt*v.momentum
     v.y = v.y + v.velocityY*dt*v.momentum
+    v.shape:moveTo(v.x + v.width/2, v.y+v.height/2)
   end
 end
 
