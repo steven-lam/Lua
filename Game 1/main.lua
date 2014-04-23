@@ -266,10 +266,10 @@ function love.draw()
   --  love.graphics.print(hero.nose.x,600,200)
   --  love.graphics.print("nose Y : ",500,225)
   --  love.graphics.print(hero.nose.y,600,225)
+  
+    -- make text white  
+    love.graphics.setColor(255,255,255)
     
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.rectangle("line",hero.x ,hero.y ,hero.width,hero.height)
-  --love.graphics.draw(hero.hit, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:   getHeight()/2)
     -- draw the Game's level
     love.graphics.print("Level : ", 200, 10)
     love.graphics.print(gameLevel, 250, 10)
@@ -339,7 +339,6 @@ end
 
 function shootDetection(dt)
 -- shoot detection
-	local remEnemy = {}
 	local remShot = {}
   
 	-- update shots
@@ -349,52 +348,18 @@ function shootDetection(dt)
   v.y = v.y + v.velocityy * dt * 25
   v.shape:moveTo(v.x,v.y)
   
-	--mark shots that are not visible for removal
-	if (v.y < 0 or v.x < 0) then
-		table.insert(remShot, i)
-  elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
-     table.insert(remShot, i)
-	end
-
---	-- check for collision with enemies
---  for ii,vv in ipairs(enemies) do
---		if checkCollision(v.x,v.y,2,2,vv.x,vv.y,vv.width,vv.height) then 
---      if (vv.img == rightFace) then
---        vv.img = rightDeadBug
---      else
---        vv.img = leftDeadBug
---      end
---			-- mark that enemy for removal
---			table.insert(remEnemy, vv.rank)
---			-- mark the shot to be removed
---			table.insert(remShot, i)
---       hero.score = hero.score + 1
---		end
---	end
+  --mark shots that are not visible for removal
+    if (v.y < 0 or v.x < 0) then
+      table.insert(remShot, i)
+    elseif (v.y > love.window.getHeight() or v.x > love.window.getWidth()) then
+       table.insert(remShot, i)
+    end
   end
   
---	-- remove the marked enemies
---  for i,v in ipairs(remEnemy) do 
---   	for ii,vv in ipairs(enemies) do
---      if(v == vv.rank) then
---        -- add enemy being deleted to enemyDeaths 
---        -- for after image
---        local enemy = vv
---        enemy.tick = 0
---        table.insert(enemyDeaths,enemy)
---        -- remove enemy from enemy's who are still alive
---        table.remove(enemies,ii)
---        enemyCount = enemyCount - 1;
---        -- bug's death audio
---        playDeadBugSFX()
---        -- reduce enemyID by 1 because one enemy is gone
---        enemyID = enemyID - 1
---      end
---    end
---  end 
- 
   -- remove the shots that need to be removed
-  for i,v in ipairs(remShot) do 
+  for i,v in ipairs(remShot) do
+    -- remove from collider AND shot table
+    Collider:remove(hero.shots[v].shape)
    	table.remove(hero.shots, v)
   end 
 end
