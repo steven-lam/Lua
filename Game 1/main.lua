@@ -212,6 +212,7 @@ function love.draw()
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(main_menuBG)
   elseif(gameState == "instructions") then
+        love.graphics.setColor(255,255,255,255)
     love.graphics.draw(instruction)
   elseif (gameState == "game") then
     -- draws background
@@ -307,21 +308,6 @@ function love.draw()
  end
   
   --hero.shape:draw("fill")
-  
-  love.graphics.setColor(0,0,255)
-  for i,v in ipairs (enemies) do
-    local vx,vy = v.shape:center()
---    love.graphics.print(x, 600,200)
---    love.graphics.print(y,600,250)
-    v.shape:draw("fill")
-    love.graphics.print( math.floor(vx), testx, testy + 25)
-    testx = testx + 50
-    testy = testy + 25
-    love.graphics.print( math.floor(vy), testx, testy)
-    testx = 600
-    testy = testy + 25
-  end
-  testy = 150
   
   love.graphics.print( math.floor(x), 600, 100)
   love.graphics.print( math.floor(y), 650, 100)
