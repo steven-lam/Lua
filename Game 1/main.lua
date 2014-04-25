@@ -11,8 +11,6 @@
 -- Collider
   HC = require("Extern/HardonCollider")
 
-  x = 0
-  y = 0
   shotD = false
   
 function love.load()
@@ -53,8 +51,6 @@ function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
           detected = hero.shape
     end
     
-    x = mtv_x
-    y = mtv_y
     test = true
   end
     
@@ -133,11 +129,19 @@ function love.keypressed(key)
   elseif(gameState == "instructions") then
     if(key == "return") then
       game.next()
-      hero.init()
-      enemy.init()
       love.audio.stop(instructionAudio.music)
       love.audio.play(inGameAudio.music)
       hero.shape = Collider:addRectangle(hero.x, hero.y , hero.img:getWidth()/2, hero.img: getHeight())
+    end
+  elseif(gameState == "practice") then
+    if (key == " ") then
+      shoot()
+    end
+    if(key == "return") then
+      game.next()
+      hero.init()
+      enemy.init()
+     -- love.audio.play(inGameAudio.music)
     end
   elseif(gameState == "game") then
     if (key == " ") then
@@ -186,14 +190,21 @@ end
 
 function love.update(dt) 
   shotD = false
-    test = false
--- game state: Main Menu
+  test = false
+  -- game state: Main Menu
   if(gameState == "main_menu") then
     audio:keepPlaying(main_menuAudio)
--- game state: Instructions     
+  -- game state: Instructions     
   elseif(gameState == "instructions") then
     audio:keepPlaying(instructionAudio)
--- game state: In Game  
+  -- game state: Practice
+  elseif(gameState == "practice") then
+    -- Allow Hero's movement
+    moveHero(dt)
+    -- Rotates the hero's image
+    hero.rotationUpdate()
+    -- Checks for shots' collision
+    shootUpdate(dt)
   elseif(gameState == "game") then
       detected = hero.shape
       detected1 = hero.shape
@@ -242,11 +253,36 @@ function love.draw()
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(main_menuBG)
   elseif(gameState == "instructions") then
-        love.graphics.setColor(255,255,255,255)
-    love.graphics.draw(instruction)
-  elseif (gameState == "game") then
-    -- draws background
     love.graphics.setColor(255,255,255,255)
+    love.graphics.draw(instruction)
+  elseif(gameState == "practice") then
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.draw(background)
+    hero.healthBar()
+    -- draw the Game's level
+    love.graphics.print("Level : ", 200, 10)
+    love.graphics.print(gameLevel, 250, 10)
+    
+    -- draw the hero's score
+    love.graphics.print("Score : ", 460, 10)
+    love.graphics.print(hero.score, 510, 10)
+    
+     -- draw our hero
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.draw(hero.img, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:   getHeight()/2)
+    
+     -- shots
+    love.graphics.setColor(255,0,0)
+    for i,v in ipairs(hero.shots) do 
+      love.graphics.rectangle("fill", v.x, v.y, 2,2)
+    end
+    
+    -- practice prompt
+    love.graphics.print("PRACTICE MODE - FLY YOUR BEST", love.window.getWidth() / 3 + 50, love.window.getHeight() / 4)
+    love.graphics.print("Press Enter when ready to play", love.window.getWidth() / 3 + 50, love.window.getHeight() / 4 + 50)
+  elseif (gameState == "game") then
+    love.graphics.setColor(255,255,255,255)
+    -- draws background
     love.graphics.draw(background)
     
     -- draw the rocket's health bar
@@ -288,7 +324,7 @@ function love.draw()
     love.graphics.print("Enemy Count : ", 460, 30)
     love.graphics.print(enemyCount, 560, 30)
     
-    -- let's draw our hero
+    -- draw our hero
     love.graphics.setColor(255,255,255,255)
     love.graphics.draw(hero.img, hero.x + hero.img:getWidth()/2, hero.y + hero.img:getHeight()/2 , math.rad(rotation), 1, 1, hero.img:getWidth()/2, hero.img:   getHeight()/2)
 
@@ -324,11 +360,11 @@ function love.draw()
  end
   
   if(gameState == "game") then
-  love.graphics.setColor(255,255,255)
-    detected:draw("fill")
-  love.graphics.setColor(0,255,0)
-    detected1:draw("fill")
-    detected2:draw("fill")
+--    love.graphics.setColor(255,255,255)
+--    detected:draw("fill")
+--    love.graphics.setColor(0,255,0)
+--    detected1:draw("fill")
+--    detected2:draw("fill")
     if(shotD) then
       love.graphics.print("shot collision", 500, 300)
     end
