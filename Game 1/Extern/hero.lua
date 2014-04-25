@@ -17,7 +17,6 @@ function hero.init()
   hero.nose.y = hero.y - hero.img:getHeight()/2
   hero.velocityX = 0
   hero.velocityY = 0
-  hero.momentum = 0
   hero.health = 100
   hero.health_frame = 0
   heroRadius = 50
@@ -26,6 +25,8 @@ function hero.init()
   rotation = 0
   rotationValue = 0
   newRotation = 0
+-- velocity limits
+  velocityLimit = 1750
 end
   
   -- Hero's movements
@@ -33,34 +34,62 @@ function moveHero(dt)
   speedUp = love.keyboard.isDown("up")
   slowDown = love.keyboard.isDown("down")
   
-  -- momentum limit
-  if(hero.momentum >= 15) then
-    hero.momentum = 15
-  elseif(hero.momentum <= 0) then
-    hero.momentum = 0
-  end
-  
   -- keyboard actions for the hero
-  hero.x = hero.x + hero.velocityX*dt*hero.momentum
-  hero.y = hero.y + hero.velocityY*dt*hero.momentum
+  hero.x = hero.x + hero.velocityX*dt*.1
+  hero.y = hero.y + hero.velocityY*dt*.1
   hero.shape:moveTo(hero.x + hero.width/2, hero.y+hero.height/2)
   -- plays thrusters audio if hero moves and changes image
   -- if not, slow hero down and changeg image to w/o thrusters
   if(speedUp) then
     love.audio.play(thrusters)
     hero.img = love.graphics.newImage("Images/rocketIgnition.png")
-    hero.momentum = hero.momentum + .1
     -- updates hero's movement based on the direction he is facing
-    hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-    hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
+    hero.velocityX = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.velocityX 
+    hero.velocityY = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2) + hero.velocityY
+  -- if rocket is slowing down
   elseif (slowDown) then
     love.audio.play(thrusters)
     hero.img = love.graphics.newImage("Images/rocketIgnition.png")
-    hero.momentum = hero.momentum - .2
+    -- X velocity
+    if(hero.velocityX > 0 )then
+      hero.velocityX = hero.velocityX - 15
+    elseif(hero.velocityX < 0) then
+      hero.velocityX = hero.velocityX + 15
+    end
+    -- Y velocity
+    if(hero.velocityY > 0 )then
+      hero.velocityY = hero.velocityY - 15
+    elseif(hero.velocityY < 0) then
+      hero.velocityY = hero.velocityY + 15
+    end
+  -- if rocket is not speeding up/slowing down then slow it down
   else 
-    hero.momentum = hero.momentum - .1
+    -- X velocity
+    if(hero.velocityX > 0 )then
+      hero.velocityX = hero.velocityX - 10
+    elseif(hero.velocityX < 0) then
+      hero.velocityX = hero.velocityX + 10
+    end
+    -- Y velocity
+    if(hero.velocityY > 0 )then
+      hero.velocityY = hero.velocityY - 10
+    elseif(hero.velocityY < 0) then
+      hero.velocityY = hero.velocityY + 10
+    end
     hero.img = love.graphics.newImage("Images/rocket.png")
     love.audio.stop(thrusters)
+  end
+  -- limit the velocity's X
+  if(hero.velocityX >= velocityLimit) then
+    hero.velocityX = velocityLimit
+  elseif (hero.velocityX <= -1 * velocityLimit) then
+    hero.velocityX = -1 * velocityLimit
+  end
+  -- limit the velocity's Y
+  if(hero.velocityY >= velocityLimit) then
+    hero.velocityY = velocityLimit
+  elseif (hero.velocityY <= -1 * velocityLimit) then
+    hero.velocityY = -1 * velocityLimit
   end
   -- verify that the rocket is in bounds
   cornerCheck()
@@ -70,7 +99,7 @@ end
 -- update hero's image based on rotation
 function hero.rotationUpdate()
   if (love.keyboard.isDown("left") and love.keyboard.isDown("right")) then
-      rotation = rotation;
+      rotation = rotation
   elseif (love.keyboard.isDown("right")) then
       rotation =  rotation + math.pi 
   elseif (love.keyboard.isDown("left")) then
@@ -96,7 +125,7 @@ end
 function heroDamage()
   hero.health_frame = hero.health_frame + 1
   if(hero.health_frame == 10) then
-      hero.health = hero.health - 1;
+      hero.health = hero.health - 1
       hero.health_frame = 0
   end
 end
@@ -109,7 +138,8 @@ function shoot ()
 	shot.y = hero.nose.y + hero.img:getHeight() / 2 + 1
   shot.velocityx = math.sin(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
   shot.velocityy = -1 * math.cos(newRotation * (math.pi/180)) * (hero.img:getHeight()/2)
-  shot.shape = Collider:addRectangle(shot.x, shot.y, 2,2);
+  shot.shape = Collider:addRectangle(shot.x, shot.y, 2,2)
+  shot.damage = 1
 	table.insert(hero.shots,shot)
   love.audio.play(fire)
 end
