@@ -134,7 +134,7 @@ function love.keypressed(key)
       hero.shape = Collider:addRectangle(hero.x, hero.y , hero.img:getWidth()/2, hero.img: getHeight())
     end
   elseif(gameState == "practice") then
-    if (key == " ") then
+    if (key == "w") then
       shoot()
     end
     if(key == "return") then
@@ -144,7 +144,7 @@ function love.keypressed(key)
      -- love.audio.play(inGameAudio.music)
     end
   elseif(gameState == "game") then
-    if (key == " ") then
+    if (key == "w") then
       shoot()
     end
     -- if space is pressed

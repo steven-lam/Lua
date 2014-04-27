@@ -31,7 +31,8 @@ function spawnEnemy(heroX, heroY)
     enemy.y = 0;
     enemy.velocityX = 10
     enemy.velocityY = 10
-    enemy.momentum = 1.5;
+    enemy.momentum = 1.5
+    enemy.health = 1
     enemy.img = love.graphics.newImage("Images/ant.png")
     local quadrant = math.random(1,4) -- 4 is not included
     local hemisphere = math.random(0,2) -- 2 is not included
