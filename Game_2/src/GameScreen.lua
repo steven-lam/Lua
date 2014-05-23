@@ -40,8 +40,9 @@ function GameScreen:update(dt)
 	end
 
 	if (test) then
+
 	-- spawn some carrots
-	SpawnCarrots(self.carrots, 400, 400)
+	SpawnCarrots(self.carrots, 800, 400)
 	end
 
 	-- update carrots
