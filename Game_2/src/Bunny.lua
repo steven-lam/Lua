@@ -31,7 +31,17 @@ function Bunny:update( dt )
 
 	-- update speed
 	if love.keyboard.isDown(' ') then
-		self.body:setLinearVelocity( x , self.jumpSpeed)
+		self.body:setLinearVelocity(x , self.jumpSpeed)
+	end
+
+	-- window bound
+	if (self.body:getY() > love.window.getHeight() - self:getHeight()) then
+		self.body:setY(love.window.getHeight() - self:getHeight())
+		self.body:setLinearVelocity(x , self.jumpSpeed)
+	end
+
+	if(self.body:getY() < 0) then
+		self.body:setY(0)
 	end
 
 end
