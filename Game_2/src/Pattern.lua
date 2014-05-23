@@ -5,6 +5,7 @@ function Pattern(randomPattern)
 	size = 50
 	-- table to keep track of carrot spawn values
 	y = {}	
+	instaSpawn = false
 	--			x
 	--		x   	x
 	--	x 				x
@@ -29,6 +30,7 @@ function Pattern(randomPattern)
 		y[2] = y[1] + size
 		y[3] = y[2] + size
 		y[4] = y[3] + size
+		instaSpawn = true
 	end
 
 	-- x x x x x
@@ -41,5 +43,5 @@ function Pattern(randomPattern)
 		y[4] = y[0]
 	end
 
-	return y
+	return y, instaSpawn
 end

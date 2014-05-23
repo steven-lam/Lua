@@ -16,7 +16,7 @@ function Bunny:__init()
 	self.w = self.image:getWidth()
 	self.h = self.image:getHeight()
 	self.bounce = -250
-	self.jumpSpeed = -300
+	self.jumpSpeed = -400
 	self.score = 0
 
 	-- Bunny's body in the world
@@ -37,7 +37,7 @@ function Bunny:update( dt )
 		self.body:setLinearVelocity(0 , self.jumpSpeed)
 	else
 		-- makes sure that the bunny never moves in the x direction
-		self.body:setLinearVelocity(0, y)
+		self.body:setLinearVelocity(0, y + 5)
 		self.body:setX(self.x)
 	end
 

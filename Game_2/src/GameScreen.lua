@@ -28,7 +28,8 @@ function GameScreen:__init()
 	test = false
 	self.timeTicks = 0
 	self.spawnCount = 0
-	local y = Pattern(2)
+	local randomSpawn = math.floor(math.random() * 3)
+	local y, instaSpawn = Pattern(randomSpawn)
 end
 
 function GameScreen:update(dt)
@@ -46,18 +47,25 @@ function GameScreen:update(dt)
 	end
 
 	if (test) then
-	self.timeTicks = self.timeTicks + 1
-	-- spawn some carrots
-	if(self.timeTicks >= 20) then
-		SpawnCarrots(self.carrots, self.spawnCount, y)
-		self.timeTicks = 0
-		if(self.spawnCount >= 5) then
-			self.spawnCount = 0
-			y = Pattern(2)
-		else
-			self.spawnCount = self.spawnCount + 1
+		-- spawn some carrots
+		self.timeTicks = self.timeTicks + 1
+		if(self.timeTicks >= 20) then
+			if(instaSpawn) then
+				for i=0,5 do
+					SpawnCarrots(self.carrots, i, y)
+				end
+				y = Pattern(math.floor(math.random() * 3))
+			else
+				SpawnCarrots(self.carrots, self.spawnCount, y)
+				if(self.spawnCount >= 5) then
+					self.spawnCount = 0
+					y = Pattern(math.floor(math.random() * 3))
+				else
+					self.spawnCount = self.spawnCount + 1
+				end
+			end
+			self.timeTicks = 0
 		end
-	end
 	end
 	-- update carrots
 	CarrotUpdate(self.carrots)
