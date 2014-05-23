@@ -28,7 +28,7 @@ function GameScreen:__init()
 	test = false
 	self.timeTicks = 0
 	self.spawnCount = 0
-	local y = Pattern(0)
+	local y = Pattern(2)
 end
 
 function GameScreen:update(dt)
@@ -53,7 +53,7 @@ function GameScreen:update(dt)
 		self.timeTicks = 0
 		if(self.spawnCount >= 5) then
 			self.spawnCount = 0
-			y = Pattern(0)
+			y = Pattern(2)
 		else
 			self.spawnCount = self.spawnCount + 1
 		end
