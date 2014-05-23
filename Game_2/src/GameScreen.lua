@@ -55,6 +55,7 @@ function GameScreen:update(dt)
 					SpawnCarrots(self.carrots, i, y)
 				end
 				y = Pattern(math.floor(math.random() * 2))
+				self.timeTicks = -30
 			else
 				SpawnCarrots(self.carrots, self.spawnCount, y)
 				if(self.spawnCount >= 5) then
@@ -63,8 +64,8 @@ function GameScreen:update(dt)
 				else
 					self.spawnCount = self.spawnCount + 1
 				end
+				self.timeTicks = 0
 			end
-			self.timeTicks = 0
 		end
 	end
 	-- update carrots
