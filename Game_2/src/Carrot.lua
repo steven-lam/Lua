@@ -28,7 +28,8 @@ function Carrot:update(dt)
 
 	-- always set y velocity to 0 so carrot doesnt fall
 	self.body:setLinearVelocity(-300,0)
-
+	-- strange value i found to keep the carrot steady long enough before they exit the left screen
+	self.body:applyLinearImpulse(0,-28)
 	-- delete carrots that are off the screen
 	if(self.body:getX() < 0) then
 		self.toKill = true

@@ -12,7 +12,7 @@ function Pattern(randomPattern)
 	--	x 				x
 	
 	if(randomPattern == 0) then
-		y[0] = math.random() * 450 + 150
+		y[0] = math.random() * 450 + 100
 		y[1] = y[0]  - size
 		y[2] = y[0]  - size * 2
 		y[3] = y[0]  - size

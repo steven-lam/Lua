@@ -100,7 +100,7 @@ end
 
 function CarrotUpdate(carrots)
 	for i,v in ipairs (carrots) do
-		v:update()
+		v:update(dt)
 	end 
 end
 
