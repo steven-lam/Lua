@@ -25,13 +25,12 @@ function Carrot:__init(x , y)
 end
 
 function Carrot:update(dt)
-	
+
 	-- store current speed
 	local x , y = self.body:getLinearVelocity()
 
 	-- always set y velocity to 0 so carrot doesnt fall
-	self.body:setLinearVelocity(x , 0)
-
+	self.body:setLinearVelocity(x,0)
 
 end
 

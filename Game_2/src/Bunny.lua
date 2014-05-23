@@ -32,8 +32,12 @@ function Bunny:update( dt )
 	local x, y = self.body:getLinearVelocity()
 
 	-- update speed
-	if love.keyboard.isDown(' ') then
-		self.body:setLinearVelocity(x , self.jumpSpeed)
+	if (love.keyboard.isDown(' ')) then
+		self.body:setLinearVelocity(0 , self.jumpSpeed)
+	else
+		-- makes sure that the bunny never moves in the x direction
+		self.body:setLinearVelocity(0, y)
+		self.body:setX(self.x)
 	end
 
 	-- window bound
