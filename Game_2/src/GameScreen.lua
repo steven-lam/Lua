@@ -54,7 +54,7 @@ function GameScreen:update(dt)
 				for i=0,5 do
 					SpawnCarrots(self.carrots, i, y)
 				end
-				y = Pattern(math.floor(math.random() * 3))
+				y = Pattern(math.floor(math.random() * 2))
 			else
 				SpawnCarrots(self.carrots, self.spawnCount, y)
 				if(self.spawnCount >= 5) then
