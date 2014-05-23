@@ -71,6 +71,9 @@ function GameScreen:render()
 	for i, v in ipairs (self.carrots) do
 		v:render()
 	end
+
+	-- draw the score
+	love.graphics.print(self.bunny.score, 400, 15)
 end
 
 function SpawnCarrots(tableToSpawmIn, posX, posY)
@@ -119,9 +122,15 @@ function beginContact( a, b, coll )
 	local tempB = b:getUserData()
 
 	if (tempA:is(Bunny) and tempB:is(Carrot)) then
+		local x,y = tempA.body:getLinearVelocity()
 		tempB.toKill = true
+		tempA.score = tempA.score + 1
+		tempA.body:setLinearVelocity(0 , y)
 	elseif (tempA:is(Carrot) and tempB:is(Bunny)) then
+		local x,y = tempA.body:getLinearVelocity()
 		tempA.toKill = true
+		tempB.score = tempB.score + 1
+		tempB.body:setLinearVelocity(0 , y)
 	end
 end
 

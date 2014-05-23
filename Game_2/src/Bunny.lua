@@ -17,6 +17,7 @@ function Bunny:__init()
 	self.h = self.image:getHeight()
 	self.bounce = -250
 	self.jumpSpeed = -300
+	self.score = 0
 
 	-- Bunny's body in the world
 	self.body = love.physics.newBody( world, self.x, self.y, "dynamic")
