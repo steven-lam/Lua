@@ -26,9 +26,9 @@ function GameScreen:__init()
 	self.carrots = {}
 
 	test = false
-	spawnTicks = 0
-	spawnCount = 0
-		local y = Pattern(0)
+	self.timeTicks = 0
+	self.spawnCount = 0
+	local y = Pattern(0)
 end
 
 function GameScreen:update(dt)
@@ -38,26 +38,27 @@ function GameScreen:update(dt)
 	-- update the bunny
 	self.bunny:update(dt)
 	if(love.keyboard.isDown('b')) then
-		test = true
-	else
-		test = false
+		if(test) then
+			test = false
+		else
+			test = true
+		end
 	end
 
 	if (test) then
-
+	self.timeTicks = self.timeTicks + 1
 	-- spawn some carrots
-	if(spawnTicks == 10) then
-		SpawnCarrots(self.carrots, y[spawnCount])
-		spawnCount = spawnCount + 1
-		if(spawnCount == 5) then
-			spawnCount = 0
+	if(self.timeTicks >= 20) then
+		SpawnCarrots(self.carrots, self.spawnCount, y)
+		self.timeTicks = 0
+		if(self.spawnCount >= 5) then
+			self.spawnCount = 0
+			y = Pattern(0)
+		else
+			self.spawnCount = self.spawnCount + 1
 		end
-		spawnTicks = 0
-	else
-		spawnTicks = spawnTicks + 1
 	end
 	end
-
 	-- update carrots
 	CarrotUpdate(self.carrots)
 
@@ -89,9 +90,12 @@ function GameScreen:render()
 	love.graphics.print(self.bunny.score, 400, 15)
 end
 
-function SpawnCarrots(tableToSpawmIn, y)
-	table.insert(tableToSpawmIn, Carrot(800, y))
-	tableToSpawmIn[#tableToSpawmIn].body:applyForce(-50000 , 0)
+function SpawnCarrots(tableToSpawmIn, spawnCount, pattern)
+	if(spawnCount >= 5) then
+		spawnCount = 0
+	else
+		table.insert(tableToSpawmIn, Carrot(800, pattern[spawnCount]))
+	end
 end
 
 function CarrotUpdate(carrots)
