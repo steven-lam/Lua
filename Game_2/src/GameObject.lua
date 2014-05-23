@@ -1,4 +1,4 @@
-class = require "external/30log/30log"
+class = require "extern/30log/30log"
 
 GameObject = class()
 

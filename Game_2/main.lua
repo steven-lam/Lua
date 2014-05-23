@@ -1,16 +1,21 @@
+world = nil
+
 require('src/Bunny')
-require('src/TitleScreen')
+require('src/Screen')
+require('src/GameScreen')
 
 function love.load() 
 
 	love.window.setTitle("Bunny Jump")
-
-	ActiveScreen = TitleScreen()
+	love.graphics.setBackgroundColor(255,255,255)
+	ActiveScreen = GameScreen()
 
 end
 
-function love.update()
+function love.update(dt)
+	ActiveScreen:update(dt)
 end
 
 function love.draw()
+	ActiveScreen:render()
 end

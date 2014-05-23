@@ -1,11 +1,11 @@
-require("src/GameObject.lua")
+require("src/GameObject")
 
 Bunny = GameObject:extends()
 
-function Bunny:__init(x , y)
+function Bunny:__init()
 
 	--Bunny's image
-	self.image = love.graphics.newImagE("images/bunny_still.png")
+	self.image = love.graphics.newImage("images/bunny_still.png")
 
 	-- call super class's constructor
 	Bunny.super: __init()
@@ -15,6 +15,12 @@ function Bunny:__init(x , y)
 	self.w = self.image:getWidth()
 	self.h = self.image:getHeight()
 	self.jumpSpeed = 20
+
+	-- Bunny's body in our world
+	self.body = love.physics.newBody( world, self.x, self.y, "static")
+	self.shape = love.physics.newRectangleShape(self.w, self.h)
+	self.fixture = love.physics.newFixture(self.body, self.shape, 1)
+	self.fixture:setUserData(self)
 
 end
 
@@ -31,5 +37,5 @@ function Bunny:update( dt )
 end
 
 function Bunny:render()
-	love.graphics.draw(self.image, self.getX(), self.getY())
+	love.graphics.draw(self.image, self.body:getX(), self.body:getY())
 end
