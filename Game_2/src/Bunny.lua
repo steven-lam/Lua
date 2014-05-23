@@ -14,10 +14,10 @@ function Bunny:__init()
 	self.y = 300
 	self.w = self.image:getWidth()
 	self.h = self.image:getHeight()
-	self.jumpSpeed = 20
+	self.jumpSpeed = -250
 
 	-- Bunny's body in our world
-	self.body = love.physics.newBody( world, self.x, self.y, "static")
+	self.body = love.physics.newBody( world, self.x, self.y, "dynamic")
 	self.shape = love.physics.newRectangleShape(self.w, self.h)
 	self.fixture = love.physics.newFixture(self.body, self.shape, 1)
 	self.fixture:setUserData(self)
@@ -30,7 +30,7 @@ function Bunny:update( dt )
 	local x, y = self.body:getLinearVelocity()
 
 	-- update speed
-	if love.keyboard.isDown('space') then
+	if love.keyboard.isDown(' ') then
 		self.body:setLinearVelocity( x , self.jumpSpeed)
 	end
 

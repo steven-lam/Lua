@@ -4,7 +4,7 @@ GameScreen = Screen:extends()
 
 function GameScreen:__init()
 	-- Create the world
-	world = love.physics.newWorld( 0, 0, false)
+	world = love.physics.newWorld( 0, 9.8 * 64, false)
 	
 	-- Create a Bunny
 	self.bunny = Bunny()
@@ -14,9 +14,10 @@ function GameScreen:__init()
 end
 
 function GameScreen:update(dt)
-	
+	-- update the bunny
 	self.bunny:update(dt)
 
+	-- update the world
 	world:update(dt)
 end
 
