@@ -7,6 +7,8 @@ function GameObject:__init()
 	self.y = 0
 	self.w = 0
 	self.h = 0
+
+	self.dead = false
 end
 
 function GameObject:update(dt) 
@@ -31,3 +33,10 @@ function GameObject:getHeight()
 	return self.h
 end
 
+ function GameObject:kill()
+ 	if self.dead == false then
+ 		self.fixture:destroy()
+ 		self.body:destroy()
+ 		self.dead = true
+ 	end
+ end
