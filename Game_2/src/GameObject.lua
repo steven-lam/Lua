@@ -9,8 +9,10 @@ function GameObject:__init()
 	self.h = 0
 end
 
-
 function GameObject:update(dt) 
+end
+
+function GameObject:render()
 end
 
 function GameObject:getX()
