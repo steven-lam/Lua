@@ -26,11 +26,8 @@ end
 
 function Carrot:update(dt)
 
-	-- store current speed
-	local x , y = self.body:getLinearVelocity()
-
 	-- always set y velocity to 0 so carrot doesnt fall
-	self.body:setLinearVelocity(x,0)
+	self.body:setLinearVelocity(-500,0)
 
 	-- delete carrots that are off the screen
 	if(self.body:getX() < 0) then

@@ -1,10 +1,11 @@
 require("src/Screen")
+require("src/Pattern")
 
 GameScreen = Screen:extends()
 
-gravity = 9.8 * 64
-
 function GameScreen:__init()
+	local gravity = 9.8 * 64
+
 	-- Create the world
 	world = love.physics.newWorld( 0, gravity, false)
 	world:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -25,6 +26,9 @@ function GameScreen:__init()
 	self.carrots = {}
 
 	test = false
+	spawnTicks = 0
+	spawnCount = 0
+		local y = Pattern(0)
 end
 
 function GameScreen:update(dt)
@@ -42,7 +46,16 @@ function GameScreen:update(dt)
 	if (test) then
 
 	-- spawn some carrots
-	SpawnCarrots(self.carrots, 800, 400)
+	if(spawnTicks == 10) then
+		SpawnCarrots(self.carrots, y[spawnCount])
+		spawnCount = spawnCount + 1
+		if(spawnCount == 5) then
+			spawnCount = 0
+		end
+		spawnTicks = 0
+	else
+		spawnTicks = spawnTicks + 1
+	end
 	end
 
 	-- update carrots
@@ -76,8 +89,8 @@ function GameScreen:render()
 	love.graphics.print(self.bunny.score, 400, 15)
 end
 
-function SpawnCarrots(tableToSpawmIn, posX, posY)
-	table.insert(tableToSpawmIn, Carrot(posX, posY))
+function SpawnCarrots(tableToSpawmIn, y)
+	table.insert(tableToSpawmIn, Carrot(800, y))
 	tableToSpawmIn[#tableToSpawmIn].body:applyForce(-50000 , 0)
 end
 
