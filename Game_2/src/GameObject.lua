@@ -9,6 +9,7 @@ function GameObject:__init()
 	self.h = 0
 
 	self.dead = false
+	self.kill = false
 end
 
 function GameObject:update(dt) 

@@ -5,6 +5,7 @@ require('src/Screen')
 require('src/Carrot')
 require('src/GameScreen')
 
+
 function love.load() 
 
 	love.window.setTitle("Hungry Bunny")
