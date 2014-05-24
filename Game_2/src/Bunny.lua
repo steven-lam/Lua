@@ -68,3 +68,8 @@ end
 function Bunny:render()
 	love.graphics.draw(self.image, self.body:getX(), self.body:getY())
 end
+
+-- Set a ghost function for testing purposes
+function Bunny:ghost()
+	self.fixture:setMask(2,3,4)
+end

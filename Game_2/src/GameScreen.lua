@@ -49,10 +49,12 @@ function GameScreen:__init()
 	-- Trap spawn attributes
 	self.trapSpawn = {}
 	self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.horzSpawn)
-	
+
 end
 
 function GameScreen:update(dt)
+	-- ghost function for testing
+	--self.bunny:ghost()
 
 	-- scroll background
 	ScrollBackGround()
@@ -285,7 +287,17 @@ function beginContact( a, b, coll )
 		tempA.toKill = true
 		tempB.toKill = true
 		tempA.body:setLinearVelocity(0, y)
-	elseif(tempA:is(Wolf) and tempB:is(Bunny)) then
+	elseif (tempA:is(Wolf) and tempB:is(Bunny)) then
+		local x,y = tempB.body:getLinearVelocity()
+		tempA.toKill = true
+		tempB.toKill = true
+		tempB.body:setLinearVelocity(0, y)
+	elseif (tempA:is(Bunny) and tempB:is(Trap)) then
+		local x,y = tempA.body:getLinearVelocity()
+		tempA.toKill = true
+		tempB.toKill = true
+		tempA.body:setLinearVelocity(0, y)
+	elseif (tempA:is(Trap) and tempB:is(Bunny)) then
 		local x,y = tempB.body:getLinearVelocity()
 		tempA.toKill = true
 		tempB.toKill = true
