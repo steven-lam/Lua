@@ -36,11 +36,13 @@ function GameScreen:__init()
 	
 	-- Spawn attributes
 	self.timeTicks = 0
-	self.horzSpawn = true
+	self.curSpawnType = math.floor(math.random() * 2)
+	self.carrotHorzSpawn = true
+	self.trapHorzSpawm = true
 
 	-- Carrot Spawn attributes
 	self.carrotSpawn = {}
-	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.horzSpawn)
+	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.carrotHorzSpawn)
 
 	-- Wolf spawm attributes
 	self.wolfSpawnTime = 7
@@ -48,7 +50,7 @@ function GameScreen:__init()
 
 	-- Trap spawn attributes
 	self.trapSpawn = {}
-	self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.horzSpawn)
+	self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.carrotHorzSpawn)
 
 end
 
@@ -65,22 +67,40 @@ function GameScreen:update(dt)
 	-- Spawn Object Logic
 	self.timeTicks = self.timeTicks + 1
 	if(self.timeTicks >= 100) then
-		-- Carrot Spawner
-		if(self.carrotSpawn.vert) then
-			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
-			self.horzSpawn = true
-		else
-			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
-			-- random between next carrot spawn as vertical or horizontal
-			self.horzSpawn = BinaryRandom()
+		-- Spawn Carrot
+		if(self.curSpawnType == 0) then
+			if(self.carrotSpawn.vert) then
+				SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
+				self.carrotHorzSpawn = true
+			else
+				SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
+				-- random between next carrot spawn as vertical or horizontal
+				self.carrotHorzSpawn = BinaryRandom()
+			end
+		elseif (self.curSpawnType == 1) then
+			if(self.trapSpawn.vert) then
+				SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
+				self.trapHorzSpawn = true
+			else
+				SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
+				-- random between next trap spawn as vertical or horizontal
+				self.trapHorzSpawn = BinaryRandom()
+			end
 		end
 
-		SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
-		self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.horzSpawn)
-		
-		-- random new sets of value for new pattern
-		self.timeTicks = 0
-		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.horzSpawn)
+		-- random new set of object types
+		self.curSpawnType = math.floor(math.random() * 2)
+
+		-- change time tick accordingly
+		if(self.curSpawnType == 0) then
+			self.timeTicks = 0
+		elseif (self.curSpawnType == 1) then
+			self.timeTicks = 25
+		end
+
+		-- random new sets of value for new pattern 
+		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.carrotHorzSpawn)
+		self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.trapHorzSpawm)
 
 		-- spawn wolf
 		if(self.wolfSpawnTime == 0) then
