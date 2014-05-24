@@ -28,6 +28,7 @@ function GameScreen:__init()
 	--table to keep track of objects
 	self.carrots = {}
 	self.wolves = {}
+	self.traps = {}
 
 	-- Carrot Spawn attributes
 	self.timeTicks = 0
@@ -37,10 +38,12 @@ function GameScreen:__init()
 	self.carrotSpawn = {}
 	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
 
-
 	-- Wolf spawm attributes
 	self.wolfSpawnTime = 7
 	self.wolfImageHeight = love.graphics.newImage('images/wolf.gif') : getHeight()
+
+	-- Trap spawn attributes
+
 	
 end
 
@@ -55,6 +58,8 @@ function GameScreen:update(dt)
 	-- Spawn Object Logic
 	self.timeTicks = self.timeTicks + 1
 	if(self.timeTicks >= 100) then
+		SpawnTraps(self.traps, 800, 300)
+		-- Carrot Spawner
 		if(self.carrotSpawn.vert) then
 			for i=0, 4 do
 				for j=0, 4 do
@@ -83,7 +88,7 @@ function GameScreen:update(dt)
 		-- spawn wolf
 		if(self.wolfSpawnTime == 0) then
 			local wolf_x, wolf_y = 800, math.random() * (love.window.getHeight() - self.wolfImageHeight * 2) + self.wolfImageHeight  
-					SpawnWolves(self.wolves, wolf_x, wolf_y)
+			SpawnWolves(self.wolves, wolf_x, wolf_y)
 			self.wolfSpawnTime = math.floor(math.random() * 5)
 		else
 			self.wolfSpawnTime = self.wolfSpawnTime - 1
@@ -96,11 +101,17 @@ function GameScreen:update(dt)
 	-- update wolves
 	WolvesUpdate(self.wolves)
 
+	-- update traps
+	TrapsUpdates(self.traps)
+
 	-- remove carrots that were eaten
 	RemoveCarrots(self.carrots)
 
 	-- remove wolfs that have eaten the bunny
 	RemoveWolves(self.wolves)
+
+	-- remove traps that are off the screen
+	RemoveTraps(self.traps)
 
 	-- if bunny is dead then game is over 
 	if (self.bunny.toKill) then
@@ -129,12 +140,39 @@ function GameScreen:render()
 		v:render()
 	end
 
+	-- draw traps
+	for i, v in ipairs (self.traps) do
+		v:render()
+	end
+
 	-- draw the score
 	love.graphics.print(self.bunny.score, 400, 15)
 
 	-- check to see if spawning
 	if(test) then
 		love.graphics.print('spawning', 300, 15)
+	end
+end
+
+-----------------------------------------------------------------------
+--							Traps
+-----------------------------------------------------------------------
+function SpawnTraps(tableToSpawmIn, x, y)
+	table.insert(tableToSpawmIn, Trap(x,y))
+end
+
+function TrapsUpdates(traps)
+	for i,v in ipairs (traps) do
+		v:update(dt)
+	end
+end
+
+function RemoveTraps(traps)
+	for i,v in ipairs(traps) do
+		if (v.toKill == true) then
+			v:kill()
+			table.remove(traps,i)
+		end
 	end
 end
 

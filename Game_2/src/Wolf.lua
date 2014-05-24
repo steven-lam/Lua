@@ -23,7 +23,7 @@ function Wolf:__init(x , y)
 
 	--setting category for other objects to ignore collision
 	self.fixture:setCategory(3)
-	self.fixture:setMask(2)
+	self.fixture:setMask(2,4)
 end
 
 function Wolf:update(dt)
