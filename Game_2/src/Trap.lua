@@ -22,7 +22,7 @@ function Trap:__init(x, y)
 
 	--setting category for other objects to ignore collision
 	self.fixture:setCategory(4)
-	self.fixture:setMask(2,4)
+	self.fixture:setMask(2,3,4)
 end
 
 function Trap:update(dt)
