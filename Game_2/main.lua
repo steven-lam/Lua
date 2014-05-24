@@ -4,6 +4,7 @@ gui = require('extern/quickie')
 require('src/Bunny')
 require('src/Screen')
 require('src/Carrot')
+require('src/Wolf')
 require('src/TitleScreen')
 require('src/GameScreen')
 

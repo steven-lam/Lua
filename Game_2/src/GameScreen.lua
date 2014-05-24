@@ -24,8 +24,9 @@ function GameScreen:__init()
 	-- Call super class to give this object a a name
 	self.super:__init('GameScreen')
 
-	--table to keep track of the carrots
+	--table to keep track of objects
 	self.carrots = {}
+	self.wolves = {}
 
 	test = false
 	self.timeTicks = 0
@@ -55,6 +56,7 @@ function GameScreen:update(dt)
 		-- spawn some carrots
 		self.timeTicks = self.timeTicks + 1
 		if(self.timeTicks >= 100) then
+			SpawnWolves(self.wolves, 800,300)
 			if(self.carrotSpawn.vert) then
 				for i=0, 4 do
 					for j=0, 4 do
@@ -79,8 +81,14 @@ function GameScreen:update(dt)
 		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
 		end
 	end
+	
 	-- update carrots
 	CarrotUpdate(self.carrots)
+
+	-- update wolves
+	for i,v in ipairs (self.wolves) do
+		v:update(dt)
+	end
 
 	-- remove carrots that were eaten
 	for i,v in ipairs( self.carrots ) do
@@ -106,6 +114,11 @@ function GameScreen:render()
 		v:render()
 	end
 
+	-- draw wolves
+	for i, v in ipairs (self.wolves) do
+		v:render()
+	end
+
 	-- draw the score
 	love.graphics.print(self.bunny.score, 400, 15)
 
@@ -115,6 +128,16 @@ function GameScreen:render()
 	end
 end
 
+-----------------------------------------------------------------------
+--							Wolves
+-----------------------------------------------------------------------
+function SpawnWolves(tableToSpawmIn, x, y)
+	table.insert(tableToSpawmIn, Wolf(x,y))
+end
+
+-----------------------------------------------------------------------
+--							Carrots
+-----------------------------------------------------------------------
 function SpawnCarrots(tableToSpawmIn, matrix, x, y, startLoc)
 	if(matrix[x][y]) then
 		table.insert(tableToSpawmIn, Carrot(x*50+800, y * 50 + startLoc))
@@ -127,6 +150,9 @@ function CarrotUpdate(carrots)
 	end 
 end
 
+-----------------------------------------------------------------------
+--							Background
+-----------------------------------------------------------------------
 function DrawBackground(pos_1X, pos_2X, pos_3X)
 	love.graphics.draw(background, pos_1X, 0)
 	love.graphics.draw(background, pos_2X, 0)
@@ -156,7 +182,9 @@ function ScrollBackGround()
 
 end
 
--- world callbacks
+-----------------------------------------------------------------------
+--							World Callbacks
+-----------------------------------------------------------------------
 function beginContact( a, b, coll )
 	local tempA = a:getUserData()
 	local tempB = b:getUserData()

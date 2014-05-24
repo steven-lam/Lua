@@ -25,6 +25,9 @@ function Bunny:__init()
 	self.fixture = love.physics.newFixture(self.body, self.shape, 1)
 	self.fixture:setUserData(self)
 
+	--setting category for other objects to ignore collision
+	self.fixture:setCategory(1)
+
 end
 
 function Bunny:update( dt )
