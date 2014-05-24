@@ -18,6 +18,8 @@ function love.load()
 	love.window.setTitle("Hungry Bunny")
 	love.graphics.setBackgroundColor(255,255,255)
 
+    highScore = 0
+    
 	-- Quickie Setup --
     fonts = {
         [12] = love.graphics.newFont(12),

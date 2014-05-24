@@ -4,6 +4,7 @@ Screen = class()
 
 function Screen:__init(name)
 	self.name = name
+	self.highScore = 0
 end
 
 function Screen:update(dt) 

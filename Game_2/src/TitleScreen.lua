@@ -6,7 +6,6 @@ function TitleScreen:__init()
 	TitleScreen.super:__init("TitleScreen")
 	self.startButton = false
 
-
 end 
 
 function TitleScreen:update(dt)
@@ -15,7 +14,9 @@ function TitleScreen:update(dt)
 		self.start_button = true
 		ActiveScreen = GameScreen()
 	end
-	gui.group.pop{}
+	if gui.Button{id = "Highscore", text = "Highscore: "..tostring(highScore)} then
+		highScore = 0
+	end
 end
 
 function TitleScreen:render()

@@ -8,6 +8,7 @@ objectTable = {'carrots', 'traps'}
 
 function GameScreen:__init()
 	local gravity = 9.8 * 64
+	math.randomseed(os.time())
 
 	-- Call super class to give this object a name
 	self.super:__init('GameScreen')
@@ -37,7 +38,7 @@ function GameScreen:__init()
 	
 	-- Spawn attributes
 	self.timeTicks = 0
-	self.curSpawnType = objectTable[math.floor(math.random() * #objectTable) + 1]
+	self.curSpawnType = objectTable[math.abs(math.random() * #objectTable) + 1]
 	self.carrotHorzSpawn = true
 	self.trapHorzSpawm = true
 
@@ -58,6 +59,11 @@ end
 function GameScreen:update(dt)
 	-- ghost function for testing
 	--self.bunny:ghost()
+
+	-- update highscore
+	if(self.bunny.score > highScore) then
+		highScore = self.bunny.score
+	end
 
 	-- scroll background
 	ScrollBackGround()
