@@ -29,7 +29,7 @@ function Pattern(randomPattern, horzPattern)
 		--	x 				x
 		
 		if(randomPattern == 0) then
-			y = math.random() * 400 + size * 2 
+			y = math.random() * 300 + size * 2 
 			matrix[0][2] = true
 			matrix[1][1] = true
 			matrix[2][0] = true
@@ -56,6 +56,19 @@ function Pattern(randomPattern, horzPattern)
 					matrix[j][i] = true
 				end
 			end
+		end
+
+		--	x				x
+		--		x		x
+		--			x
+
+		if(randomPattern == 3) then
+			y = math.random() * 300 + size * 2 
+			matrix[0][0] = true
+			matrix[1][1] = true
+			matrix[2][2] = true
+			matrix[3][1] = true
+			matrix[4][0] = true
 		end
 	else
 		vertical = true
@@ -103,6 +116,24 @@ function Pattern(randomPattern, horzPattern)
 			matrix[1][3] = true
 			matrix[3][3] = true
 			matrix[2][4] = true
+		end
+
+		--			x
+		--	x	x	x	x	x
+		--		x	x	x	
+		--	x				x
+
+		if(randomPattern == 3) then
+			y = math.random() * 250 + size
+			matrix[2][0] = true
+			for i=0,4 do
+				matrix[i][1] = true
+			end
+			for j=1,3 do
+				matrix[j][2] = true
+			end
+			matrix[0][3] = true
+			matrix[4][3] = true
 		end
 	end
 

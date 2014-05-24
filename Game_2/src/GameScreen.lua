@@ -29,8 +29,9 @@ function GameScreen:__init()
 
 	test = false
 	self.timeTicks = 0
-	self.numOfPattern = 3
+	self.numOfPattern = 4
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
+	--self.randomSpawn = 3
 	self.horzSpawn = true
 	self.carrotSpawn = {}
 	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
