@@ -8,6 +8,9 @@ dummy = false
 function GameScreen:__init()
 	local gravity = 9.8 * 64
 
+	-- Call super class to give this object a name
+	self.super:__init('GameScreen')
+
 	-- Create the world
 	world = love.physics.newWorld( 0, gravity, false)
 	world:setCallbacks(beginContact, endContact, preSolve, postSolve)
@@ -22,9 +25,6 @@ function GameScreen:__init()
 	-- Create a Bunny
 	self.bunny = Bunny()
 
-	-- Call super class to give this object a a name
-	self.super:__init('GameScreen')
-
 	--table to keep track of objects
 	self.carrots = {}
 	self.wolves = {}
@@ -35,9 +35,9 @@ function GameScreen:__init()
 	self.numOfPattern = 4
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 	self.horzSpawn = true
+	self.carrotPattern = CarrotPattern()
 	self.carrotSpawn = {}
-	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
-
+	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.randomSpawn, self.horzSpawn)
 	-- Wolf spawm attributes
 	self.wolfSpawnTime = 7
 	self.wolfImageHeight = love.graphics.newImage('images/wolf.gif') : getHeight()
@@ -83,7 +83,7 @@ function GameScreen:update(dt)
 		-- random new sets of value for new pattern
 		self.timeTicks = 0
 		self.randomSpawn = math.floor(math.random() * self.numOfPattern)
-		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
+		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.randomSpawn, self.horzSpawn)
 
 		-- spawn wolf
 		if(self.wolfSpawnTime == 0) then
