@@ -70,23 +70,10 @@ function GameScreen:update(dt)
 	if(self.timeTicks >= 100) then
 		-- Spawn Carrot
 		if(self.curSpawnType == 'carrots') then
-			if(self.carrotSpawn.vert) then
-				SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
-				self.carrotHorzSpawn = true
-			else
-				SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
-				-- random between next carrot spawn as vertical or horizontal
-				self.carrotHorzSpawn = BinaryRandom()
-			end
+			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert, self.carrotHorzSpawn)
+		-- Spawn Traps
 		elseif (self.curSpawnType == 'traps') then
-			if(self.trapSpawn.vert) then
-				SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
-				self.trapHorzSpawn = true
-			else
-				SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
-				-- random between next trap spawn as vertical or horizontal
-				self.trapHorzSpawn = BinaryRandom()
-			end
+			SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert, self.trapHorzSpawm)
 		end
 
 		-- random new set of object types
@@ -105,7 +92,7 @@ function GameScreen:update(dt)
 
 		-- spawn wolf
 		if(self.wolfSpawnTime == 0) then
-			local wolf_x, wolf_y = 800, math.random() * (love.window.getHeight() - self.wolfImageHeight * 2) + self.wolfImageHeight  
+			local wolf_x, wolf_y = love.window.getWidth(), math.random() * (love.window.getHeight() - self.wolfImageHeight * 2) + self.wolfImageHeight  
 			SpawnWolves(self.wolves, wolf_x, wolf_y)
 			self.wolfSpawnTime = math.floor(math.random() * 5)
 		else
@@ -170,7 +157,15 @@ end
 -----------------------------------------------------------------------
 --							Traps
 -----------------------------------------------------------------------
-function SpawnTraps(tableToSpawmIn, matrix, startLoc)
+function SpawnTraps(tableToSpawmIn, matrix, startLoc, curVert, curHorz)
+	-- if current spawn is vertical, guarantee next spawn is horizontal
+	-- if current spawn is horizontal, random next spawn behavior
+	if(curVert) then
+		curHorz = true
+	else
+		curHorz = BinaryRandom()
+	end
+
 	for i=0, 4 do
 		for j=0, 4 do
 			if (matrix[i][j]) then
@@ -220,7 +215,15 @@ end
 -----------------------------------------------------------------------
 --							Carrots
 -----------------------------------------------------------------------
-function SpawnCarrots(tableToSpawmIn, matrix, startLoc)
+function SpawnCarrots(tableToSpawmIn, matrix, startLoc, curVert, curHorz)
+	-- if current spawn is vertical, guarantee next spawn is horizontal
+	-- if current spawn is horizontal, random next spawn behavior
+	if(curVert) then
+		curHorz = true
+	else
+		curHorz = BinaryRandom()
+	end
+
 	for i=0, 4 do
 		for j=0, 4 do
 			if (matrix[i][j]) then
