@@ -13,13 +13,22 @@ function TrapPattern:__init()
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 end
 
-function TrapPattern:generatehorzPattern)
-	
+function TrapPattern:generate(horzPattern)
+
+	-- make the matrix a multidimensional array and set them all false / also clears the matrix
+	for i=0,self.tableSize do
+		self.matrix[i] = {}
+		for j=0,self.tableSize do
+			self.matrix[i][j] = false
+		end
+	end
+
 	-- random a new pattern every time
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 
 	local vertical = false
 	
+	print(self.randomSpawn)
 	if(horzPattern) then
 		-- x x x x x
 

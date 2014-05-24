@@ -14,19 +14,21 @@ function CarrotPattern:__init()
 end
 
 function CarrotPattern:generate(horzPattern)
-	-- random a new pattern every time
-	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
-	
-	-- if current pattern is vertical or not
-	local vertical = false
 
-	-- self.matrix to keep track of carrot spawn values
+	-- make the matrix a multidimensional array and set them all false / also clears the matrix
 	for i=0,self.tableSize do
 		self.matrix[i] = {}
 		for j=0,self.tableSize do
 			self.matrix[i][j] = false
 		end
 	end
+
+	-- random a new pattern every time
+	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
+	
+	-- if current pattern is vertical or not
+	local vertical = false
+
 	---------------------------------------------
 	-- if pattern requested is horizontal
 	if(horzPattern) then

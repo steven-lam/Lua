@@ -32,7 +32,7 @@ function GameScreen:__init()
 
 	-- Spawn patterns
 	self.carrotPattern = CarrotPattern()
-	self.trapPattern = trapPattern()
+	self.trapPattern = TrapPattern()
 	
 	-- Spawn attributes
 	self.timeTicks = 0
@@ -47,7 +47,8 @@ function GameScreen:__init()
 	self.wolfImageHeight = love.graphics.newImage('images/wolf.gif') : getHeight()
 
 	-- Trap spawn attributes
-
+	self.trapSpawn = {}
+	self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.horzSpawn)
 	
 end
 
@@ -76,6 +77,9 @@ function GameScreen:update(dt)
 			end
 		end
 
+		SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
+		self.trapSpawn.matrix, self.trapSpawn.y, self.trapSpawn.vert = self.trapPattern:generate(self.horzSpawn)
+		
 		-- random new sets of value for new pattern
 		self.timeTicks = 0
 		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.horzSpawn)
@@ -152,8 +156,14 @@ end
 -----------------------------------------------------------------------
 --							Traps
 -----------------------------------------------------------------------
-function SpawnTraps(tableToSpawmIn, x, y)
-	table.insert(tableToSpawmIn, Trap(x,y))
+function SpawnTraps(tableToSpawmIn, matrix, startLoc)
+	for i=0, 4 do
+		for j=0, 4 do
+			if (matrix[i][j]) then
+				table.insert(tableToSpawmIn, Trap(i*50+800, j * 50 + startLoc))
+			end
+		end
+	end
 end
 
 function TrapsUpdates(traps)
