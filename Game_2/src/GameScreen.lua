@@ -61,21 +61,12 @@ function GameScreen:update(dt)
 	-- Spawn Object Logic
 	self.timeTicks = self.timeTicks + 1
 	if(self.timeTicks >= 100) then
-		SpawnTraps(self.traps, 800, 300)
 		-- Carrot Spawner
 		if(self.carrotSpawn.vert) then
-			for i=0, 4 do
-				for j=0, 4 do
-					SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
-				end
-			end
+			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
 			self.horzSpawn = true
 		else
-			for i=0, 4 do
-				for j=0, 4 do
-					SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
-				end
-			end
+			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
 			if((math.random() * 2) % 2 > 1) then
 				self.horzSpawn = false
 			else
@@ -203,9 +194,13 @@ end
 -----------------------------------------------------------------------
 --							Carrots
 -----------------------------------------------------------------------
-function SpawnCarrots(tableToSpawmIn, matrix, x, y, startLoc)
-	if (matrix[x][y]) then
-		table.insert(tableToSpawmIn, Carrot(x*50+800, y * 50 + startLoc))
+function SpawnCarrots(tableToSpawmIn, matrix, startLoc)
+	for i=0, 4 do
+		for j=0, 4 do
+			if (matrix[i][j]) then
+				table.insert(tableToSpawmIn, Carrot(i*50+800, j * 50 + startLoc))
+			end
+		end
 	end
 end
 
