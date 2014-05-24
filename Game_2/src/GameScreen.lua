@@ -72,11 +72,7 @@ function GameScreen:update(dt)
 		else
 			SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
 			-- random between next carrot spawn as vertical or horizontal
-			if((math.random() * 2) % 2 > 1) then
-				self.horzSpawn = false
-			else
-				self.horzSpawn = true
-			end
+			self.horzSpawn = BinaryRandom()
 		end
 
 		SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
@@ -315,4 +311,15 @@ end
 
 function postSolve( a, b, coll )
   
+end
+
+-----------------------------------------------------------------------
+--							Random True/False
+-----------------------------------------------------------------------
+function BinaryRandom()
+	if((math.random() * 2) % 2 > 1) then
+		return true
+	else
+		return false
+	end
 end
