@@ -3,7 +3,8 @@ require("src/Pattern")
 
 GameScreen = Screen:extends()
 
-dummy = false
+-- object type table values
+objectTable = {'carrots', 'traps'}
 
 function GameScreen:__init()
 	local gravity = 9.8 * 64
@@ -36,7 +37,7 @@ function GameScreen:__init()
 	
 	-- Spawn attributes
 	self.timeTicks = 0
-	self.curSpawnType = math.floor(math.random() * 2)
+	self.curSpawnType = objectTable[math.floor(math.random() * #objectTable) + 1]
 	self.carrotHorzSpawn = true
 	self.trapHorzSpawm = true
 
@@ -68,7 +69,7 @@ function GameScreen:update(dt)
 	self.timeTicks = self.timeTicks + 1
 	if(self.timeTicks >= 100) then
 		-- Spawn Carrot
-		if(self.curSpawnType == 0) then
+		if(self.curSpawnType == 'carrots') then
 			if(self.carrotSpawn.vert) then
 				SpawnCarrots(self.carrots, self.carrotSpawn.matrix, self.carrotSpawn.y)
 				self.carrotHorzSpawn = true
@@ -77,7 +78,7 @@ function GameScreen:update(dt)
 				-- random between next carrot spawn as vertical or horizontal
 				self.carrotHorzSpawn = BinaryRandom()
 			end
-		elseif (self.curSpawnType == 1) then
+		elseif (self.curSpawnType == 'traps') then
 			if(self.trapSpawn.vert) then
 				SpawnTraps(self.traps, self.trapSpawn.matrix, self.trapSpawn.y)
 				self.trapHorzSpawn = true
@@ -89,12 +90,12 @@ function GameScreen:update(dt)
 		end
 
 		-- random new set of object types
-		self.curSpawnType = math.floor(math.random() * 2)
+		self.curSpawnType = objectTable[math.floor(math.random() * #objectTable) + 1]
 
 		-- change time tick accordingly
-		if(self.curSpawnType == 0) then
+		if(self.curSpawnType == 'carrots') then
 			self.timeTicks = 0
-		elseif (self.curSpawnType == 1) then
+		elseif (self.curSpawnType == 'traps') then
 			self.timeTicks = 25
 		end
 
@@ -164,11 +165,6 @@ function GameScreen:render()
 
 	-- draw the score
 	love.graphics.print(self.bunny.score, 400, 15)
-
-	-- check to see if spawning
-	if(test) then
-		love.graphics.print('spawning', 300, 15)
-	end
 end
 
 -----------------------------------------------------------------------

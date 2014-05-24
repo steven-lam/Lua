@@ -27,8 +27,7 @@ function TrapPattern:generate(horzPattern)
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 
 	local vertical = false
-	
-	print(self.randomSpawn)
+
 	if(horzPattern) then
 		-- x x x x x
 
