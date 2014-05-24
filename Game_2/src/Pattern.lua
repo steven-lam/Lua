@@ -16,7 +16,7 @@ function Pattern(randomPattern, horzPattern)
 	-- matrix to keep track of carrot spawn values
 	matrix = {}
 	for i=0,tableSize do
-		mt[i] = {}
+		matrix[i] = {}
 		for j=0,tableSize do
 			matrix[i][j] = false
 		end
@@ -29,7 +29,7 @@ function Pattern(randomPattern, horzPattern)
 		--	x 				x
 		
 		if(randomPattern == 0) then
-			y = math.random() * 450 + size * 2 
+			y = math.random() * 400 + size * 2 
 			matrix[0][2] = true
 			matrix[1][1] = true
 			matrix[2][0] = true
@@ -42,23 +42,22 @@ function Pattern(randomPattern, horzPattern)
 		if(randomPattern == 1) then
 			y = math.random() * 500 + size
 			for i=0,tableSize do
-				matrix[0][1] = true 
+				matrix[i][0] = true 
 			end
 		end
 
 		-- x x x x x
 		-- x x x x x
 
-		if(randomPattern = 2) then
-			y = math.random() * 500 + size
+		if(randomPattern == 2) then
+			y = math.random() * 450 + size
 			for i=0,1 do
 				for j=0, tableSize do
-					matrix[i][j] = true
+					matrix[j][i] = true
 				end
 			end
 		end
 	else
-		
 		vertical = true
 		-- x
 		-- x
@@ -69,7 +68,7 @@ function Pattern(randomPattern, horzPattern)
 		if(randomPattern == 0) then
 			y = math.random() * 250 + size
 			for i=0,tableSize do
-				matrix[i][0] = true
+				matrix[0][i] = true
 			end
 		end
 
@@ -83,16 +82,22 @@ function Pattern(randomPattern, horzPattern)
 			y = math.random() * 250 + size
 			for i=0,1 do
 				for j=0,tableSize do
-					matrix[j][i] = true
+					matrix[i][j] = true
 				end
 			end
 		end
 
+		--			x
+		--		x		x
+		--	x				x
+		--		x		x
+		--			x
+
 		if(randomPattern == 2) then
-			y = math.random() * 250 + size
+			y = math.random() * 200 + size
 			matrix[2][0] = true
 			matrix[1][1] = true
-			matrux[3][1] = true
+			matrix[3][1] = true
 			matrix[0][2] = true
 			matrix[4][2] = true
 			matrix[1][3] = true

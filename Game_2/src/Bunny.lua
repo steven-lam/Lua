@@ -37,7 +37,7 @@ function Bunny:update( dt )
 		self.body:setLinearVelocity(0 , self.jumpSpeed)
 	else
 		-- makes sure that the bunny never moves in the x direction
-		self.body:setLinearVelocity(0, y + 5)
+		self.body:setLinearVelocity(0, y + 10)
 		self.body:setX(self.x)
 	end
 

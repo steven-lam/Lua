@@ -3,6 +3,8 @@ require("src/Pattern")
 
 GameScreen = Screen:extends()
 
+dummy = false
+
 function GameScreen:__init()
 	local gravity = 9.8 * 64
 
@@ -27,9 +29,11 @@ function GameScreen:__init()
 
 	test = false
 	self.timeTicks = 0
-	self.spawnCount = 0
-	local randomSpawn = math.floor(math.random() * 3)
-	local y, instaSpawn = Pattern(randomSpawn)
+	self.numOfPattern = 3
+	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
+	self.horzSpawn = true
+	self.carrotSpawn = {}
+	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
 end
 
 function GameScreen:update(dt)
@@ -49,23 +53,29 @@ function GameScreen:update(dt)
 	if (test) then
 		-- spawn some carrots
 		self.timeTicks = self.timeTicks + 1
-		if(self.timeTicks >= 20) then
-			if(instaSpawn) then
-				for i=0,5 do
-					SpawnCarrots(self.carrots, i, y)
+		if(self.timeTicks >= 100) then
+			if(self.carrotSpawn.vert) then
+				for i=0, 4 do
+					for j=0, 4 do
+						SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
+					end
 				end
-				y = Pattern(math.floor(math.random() * 2))
-				self.timeTicks = -30
+				self.horzSpawn = true
 			else
-				SpawnCarrots(self.carrots, self.spawnCount, y)
-				if(self.spawnCount >= 5) then
-					self.spawnCount = 0
-					y = Pattern(math.floor(math.random() * 3))
-				else
-					self.spawnCount = self.spawnCount + 1
+				for i=0, 4 do
+					for j=0, 4 do
+						SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
+					end
 				end
-				self.timeTicks = 0
+				if((math.random() * 2) % 2 > 1) then
+					self.horzSpawn = false
+				else
+					self.horzSpawn = true
+				end
 			end
+		self.timeTicks = 0
+		self.randomSpawn = math.floor(math.random() * self.numOfPattern)
+		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
 		end
 	end
 	-- update carrots
@@ -97,13 +107,16 @@ function GameScreen:render()
 
 	-- draw the score
 	love.graphics.print(self.bunny.score, 400, 15)
+
+	-- check to see if spawning
+	if(test) then
+		love.graphics.print('spawning', 300, 15)
+	end
 end
 
-function SpawnCarrots(tableToSpawmIn, spawnCount, pattern)
-	if(spawnCount >= 5) then
-		spawnCount = 0
-	else
-		table.insert(tableToSpawmIn, Carrot(800, pattern[spawnCount]))
+function SpawnCarrots(tableToSpawmIn, matrix, x, y, startLoc)
+	if(matrix[x][y]) then
+		table.insert(tableToSpawmIn, Carrot(x*50+800, y * 50 + startLoc))
 	end
 end
 
