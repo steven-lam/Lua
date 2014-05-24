@@ -32,6 +32,7 @@ function GameScreen:__init()
 
 	-- Spawn patterns
 	self.carrotPattern = CarrotPattern()
+	self.trapPattern = trapPattern()
 	
 	-- Spawn attributes
 	self.timeTicks = 0

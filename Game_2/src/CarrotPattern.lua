@@ -14,7 +14,7 @@ function CarrotPattern:__init()
 end
 
 function CarrotPattern:generate(horzPattern)
-	-- random a pattern
+	-- random a new pattern every time
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 	
 	-- if current pattern is vertical or not
