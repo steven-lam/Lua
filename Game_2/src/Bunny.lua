@@ -15,7 +15,7 @@ function Bunny:__init()
 	self.y = love.window.getHeight() / 2
 	self.w = self.image:getWidth()
 	self.h = self.image:getHeight()
-	self.bounce = -250
+	self.bounce = -300
 	self.jumpSpeed = -400
 	self.score = 0
 
