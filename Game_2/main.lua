@@ -7,6 +7,7 @@ require('src/Carrot')
 require('src/Wolf')
 require('src/TitleScreen')
 require('src/GameScreen')
+require('src/EndScreen')
 
 
 function love.load() 

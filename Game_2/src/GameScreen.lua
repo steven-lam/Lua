@@ -18,6 +18,7 @@ function GameScreen:__init()
 	bg_2x = background:getWidth()
 	bg_3x = background:getWidth() * 2
 	bg_scrollSpeed = 5
+
 	-- Create a Bunny
 	self.bunny = Bunny()
 
@@ -28,60 +29,67 @@ function GameScreen:__init()
 	self.carrots = {}
 	self.wolves = {}
 
-	test = false
+	-- Carrot Spawn attributes
 	self.timeTicks = 0
 	self.numOfPattern = 4
 	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
-	--self.randomSpawn = 3
 	self.horzSpawn = true
 	self.carrotSpawn = {}
 	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
+
+
+	-- Wolf spawm attributes
+	self.wolfSpawnTime = 7
+	self.wolfImageHeight = love.graphics.newImage('images/wolf.gif') : getHeight()
+	
 end
 
 function GameScreen:update(dt)
+
 	-- scroll background
 	ScrollBackGround()
 
 	-- update the bunny
 	self.bunny:update(dt)
-	if(love.keyboard.isDown('b')) then
-		if(test) then
-			test = false
-		else
-			test = true
-		end
-	end
 
-	if (test) then
-		-- spawn some carrots
-		self.timeTicks = self.timeTicks + 1
-		if(self.timeTicks >= 100) then
-			SpawnWolves(self.wolves, 800,300)
-			if(self.carrotSpawn.vert) then
-				for i=0, 4 do
-					for j=0, 4 do
-						SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
-					end
-				end
-				self.horzSpawn = true
-			else
-				for i=0, 4 do
-					for j=0, 4 do
-						SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
-					end
-				end
-				if((math.random() * 2) % 2 > 1) then
-					self.horzSpawn = false
-				else
-					self.horzSpawn = true
+	-- Spawn Object Logic
+	self.timeTicks = self.timeTicks + 1
+	if(self.timeTicks >= 100) then
+		if(self.carrotSpawn.vert) then
+			for i=0, 4 do
+				for j=0, 4 do
+					SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
 				end
 			end
+			self.horzSpawn = true
+		else
+			for i=0, 4 do
+				for j=0, 4 do
+					SpawnCarrots(self.carrots, self.carrotSpawn.matrix, i, j, self.carrotSpawn.y)
+				end
+			end
+			if((math.random() * 2) % 2 > 1) then
+				self.horzSpawn = false
+			else
+				self.horzSpawn = true
+			end
+		end
+
+		-- random new sets of value for new pattern
 		self.timeTicks = 0
 		self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = Pattern(self.randomSpawn, self.horzSpawn)
+
+		-- spawn wolf
+		if(self.wolfSpawnTime == 0) then
+			local wolf_x, wolf_y = 800, math.random() * (love.window.getHeight() - self.wolfImageHeight * 2) + self.wolfImageHeight  
+					SpawnWolves(self.wolves, wolf_x, wolf_y)
+			self.wolfSpawnTime = math.floor(math.random() * 7)
+		else
+			self.wolfSpawnTime = self.wolfSpawnTime - 1
 		end
 	end
-	
+
 	-- update carrots
 	CarrotUpdate(self.carrots)
 
@@ -94,8 +102,14 @@ function GameScreen:update(dt)
 	-- remove wolfs that have eaten the bunny
 	RemoveWolves(self.wolves)
 
+	-- if bunny is dead then game is over 
+	if (self.bunny.toKill) then
+		ActiveScreen = EndScreen()
+	end
+
 	-- update the world
 	world:update(dt)
+	
 end
 
 function GameScreen:render()
@@ -221,11 +235,13 @@ function beginContact( a, b, coll )
 		tempB.body:setLinearVelocity(0 , y)
 	elseif (tempA:is(Bunny) and tempB:is(Wolf)) then
 		local x,y = tempA.body:getLinearVelocity()
+		tempA.toKill = true
 		tempB.toKill = true
 		tempA.body:setLinearVelocity(0, y)
 	elseif(tempA:is(Wolf) and tempB:is(Bunny)) then
 		local x,y = tempB.body:getLinearVelocity()
 		tempA.toKill = true
+		tempB.toKill = true
 		tempB.body:setLinearVelocity(0, y)
 	end
 end
