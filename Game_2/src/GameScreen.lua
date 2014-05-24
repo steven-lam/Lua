@@ -86,17 +86,13 @@ function GameScreen:update(dt)
 	CarrotUpdate(self.carrots)
 
 	-- update wolves
-	for i,v in ipairs (self.wolves) do
-		v:update(dt)
-	end
+	WolvesUpdate(self.wolves)
 
 	-- remove carrots that were eaten
-	for i,v in ipairs( self.carrots ) do
-		if v.toKill == true then
-			v:kill()
-			table.remove(self.carrots, i)
-		end
-	end
+	RemoveCarrots(self.carrots)
+
+	-- remove wolfs that have eaten the bunny
+	RemoveWolves(self.wolves)
 
 	-- update the world
 	world:update(dt)
@@ -135,11 +131,26 @@ function SpawnWolves(tableToSpawmIn, x, y)
 	table.insert(tableToSpawmIn, Wolf(x,y))
 end
 
+function WolvesUpdate(wolves)
+	for i,v in ipairs (wolves) do
+		v:update(dt)
+	end
+end
+
+function RemoveWolves(wolves)
+	for i,v in ipairs(wolves) do
+		if (v.toKill == true) then
+			v:kill()
+			table.remove(wolves,i)
+		end
+	end
+end
+
 -----------------------------------------------------------------------
 --							Carrots
 -----------------------------------------------------------------------
 function SpawnCarrots(tableToSpawmIn, matrix, x, y, startLoc)
-	if(matrix[x][y]) then
+	if (matrix[x][y]) then
 		table.insert(tableToSpawmIn, Carrot(x*50+800, y * 50 + startLoc))
 	end
 end
@@ -148,6 +159,15 @@ function CarrotUpdate(carrots)
 	for i,v in ipairs (carrots) do
 		v:update(dt)
 	end 
+end
+
+function RemoveCarrots(carrots)
+	for i,v in ipairs(carrots) do
+		if (v.toKill == true) then
+			v:kill()
+			table.remove(carrots, i)
+		end
+	end
 end
 
 -----------------------------------------------------------------------
@@ -199,6 +219,14 @@ function beginContact( a, b, coll )
 		tempA.toKill = true
 		tempB.score = tempB.score + 1
 		tempB.body:setLinearVelocity(0 , y)
+	elseif (tempA:is(Bunny) and tempB:is(Wolf)) then
+		local x,y = tempA.body:getLinearVelocity()
+		tempB.toKill = true
+		tempA.body:setLinearVelocity(0, y)
+	elseif(tempA:is(Wolf) and tempB:is(Bunny)) then
+		local x,y = tempB.body:getLinearVelocity()
+		tempA.toKill = true
+		tempB.body:setLinearVelocity(0, y)
 	end
 end
 
