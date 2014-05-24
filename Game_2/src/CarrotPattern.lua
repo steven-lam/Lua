@@ -3,14 +3,20 @@ require('src/Pattern')
 CarrotPattern = Pattern:extends()
 
 function CarrotPattern:__init()
-	CarrotPattern.super:__init('CarrotPattern')
+	CarrotPattern.super:__init('Carrot Pattern')
 	self.size = 50
 	self.tableSize = 4
 	self.y = 0
 	self.matrix = {}
+
+	self.numOfPattern = 4
+	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
 end
 
-function CarrotPattern:generate(randomPattern, horzPattern)
+function CarrotPattern:generate(horzPattern)
+	-- random a pattern
+	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
+	
 	-- if current pattern is vertical or not
 	local vertical = false
 
@@ -28,7 +34,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		--		x   	x
 		--	x 				x
 		
-		if(randomPattern == 0) then
+		if(self.randomSpawn == 0) then
 			self.y = math.random() * 300 + self.size * 2 
 			self.matrix[0][2] = true
 			self.matrix[1][1] = true
@@ -39,7 +45,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 
 		-- x x x x x
 
-		if(randomPattern == 1) then
+		if(self.randomSpawn == 1) then
 			self.y = math.random() * 500 + self.size
 			for i=0,self.tableSize do
 				self.matrix[i][0] = true 
@@ -49,7 +55,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		-- x x x x x
 		-- x x x x x
 
-		if(randomPattern == 2) then
+		if(self.randomSpawn == 2) then
 			self.y= math.random() * 450 + self.size
 			for i=0,1 do
 				for j=0, self.tableSize do
@@ -62,7 +68,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		--		x		x
 		--			x
 
-		if(randomPattern == 3) then
+		if(self.randomSpawn == 3) then
 			self.y = math.random() * 300 + self.size * 2 
 			self.matrix[0][0] = true
 			self.matrix[1][1] = true
@@ -78,7 +84,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		-- x
 		-- x
 
-		if(randomPattern == 0) then
+		if(self.randomSpawn == 0) then
 			self.y = math.random() * 250 + self.size
 			for i=0,self.tableSize do
 				self.matrix[0][i] = true
@@ -91,7 +97,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		-- x x
 		-- x x 
 
-		if(randomPattern == 1) then
+		if(self.randomSpawn == 1) then
 			self.y = math.random() * 250 + self.size
 			for i=0,1 do
 				for j=0,self.tableSize do
@@ -106,7 +112,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		--		x		x
 		--			x
 
-		if(randomPattern == 2) then
+		if(self.randomSpawn == 2) then
 			self.y = math.random() * 200 + self.size
 			self.matrix[2][0] = true
 			self.matrix[1][1] = true
@@ -123,7 +129,7 @@ function CarrotPattern:generate(randomPattern, horzPattern)
 		--		x	x	x	
 		--	x				x
 
-		if(randomPattern == 3) then
+		if(self.randomSpawn == 3) then
 			self.y = math.random() * 250 + self.size
 			self.matrix[2][0] = true
 			for i=0,4 do

@@ -25,19 +25,22 @@ function GameScreen:__init()
 	-- Create a Bunny
 	self.bunny = Bunny()
 
-	--table to keep track of objects
+	--Table to keep track of objects
 	self.carrots = {}
 	self.wolves = {}
 	self.traps = {}
 
-	-- Carrot Spawn attributes
-	self.timeTicks = 0
-	self.numOfPattern = 4
-	self.randomSpawn = math.floor(math.random() * self.numOfPattern)
-	self.horzSpawn = true
+	-- Spawn patterns
 	self.carrotPattern = CarrotPattern()
+	
+	-- Spawn attributes
+	self.timeTicks = 0
+	self.horzSpawn = true
+
+	-- Carrot Spawn attributes
 	self.carrotSpawn = {}
-	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.randomSpawn, self.horzSpawn)
+	self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.horzSpawn)
+
 	-- Wolf spawm attributes
 	self.wolfSpawnTime = 7
 	self.wolfImageHeight = love.graphics.newImage('images/wolf.gif') : getHeight()
@@ -82,8 +85,7 @@ function GameScreen:update(dt)
 
 		-- random new sets of value for new pattern
 		self.timeTicks = 0
-		self.randomSpawn = math.floor(math.random() * self.numOfPattern)
-		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.randomSpawn, self.horzSpawn)
+		self.carrotSpawn.matrix, self.carrotSpawn.y, self.carrotSpawn.vert = self.carrotPattern:generate(self.horzSpawn)
 
 		-- spawn wolf
 		if(self.wolfSpawnTime == 0) then

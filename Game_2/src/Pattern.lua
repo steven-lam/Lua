@@ -17,6 +17,12 @@ function Pattern:__init(name)
 
 	-- matrix to keep track of carrot spawn values
 	self.matrix = {}
+
+	-- number of pattern sets
+	self.numOfPattern = 0
+
+	-- random spawn number
+	self.randomSpawn = 0
 end
 
 function Pattern:generate(randomPattern, horzPattern)
