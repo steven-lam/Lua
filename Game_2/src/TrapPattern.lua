@@ -41,12 +41,14 @@ function TrapPattern:generate(horzPattern)
 		--	x
 		--		x
 		--			x
+		-- 				x
 
 		if(self.randomSpawn == 1) then
 			self.y = math.random() * 350 + self.size
 			self.matrix[0][0] = true
 			self.matrix[1][1] = true
 			self.matrix[2][2] = true
+			self.matrix[3][3] = true
 		end
 
 	else
@@ -64,16 +66,17 @@ function TrapPattern:generate(horzPattern)
 				self.matrix[0][i] = true
 			end
 		end
-
+		--				x
 		--			x
 		--		x
 		--	x		
 
 		if(self.randomSpawn == 1) then
 			self.y = math.random() * 350 + self.size
-			self.matrix[0][2] = true
-			self.matrix[1][1] = true
-			self.matrix[2][0] = true
+			self.matrix[0][4] = true
+			self.matrix[1][3] = true
+			self.matrix[2][2] = true
+			self.matrix[3][1] = true
 		end
 	end
 
