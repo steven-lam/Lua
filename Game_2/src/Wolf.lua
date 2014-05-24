@@ -28,7 +28,7 @@ end
 
 function Wolf:update(dt)
 	-- set wolves speed to be constant
-	self.body:setLinearVelocity(-600, 0)
+	self.body:setLinearVelocity(-1000, 0)
 
 	-- delete wolves that are off the screen
 	if(self.body:getX() < 0) then

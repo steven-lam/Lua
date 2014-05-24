@@ -84,7 +84,7 @@ function GameScreen:update(dt)
 		if(self.wolfSpawnTime == 0) then
 			local wolf_x, wolf_y = 800, math.random() * (love.window.getHeight() - self.wolfImageHeight * 2) + self.wolfImageHeight  
 					SpawnWolves(self.wolves, wolf_x, wolf_y)
-			self.wolfSpawnTime = math.floor(math.random() * 7)
+			self.wolfSpawnTime = math.floor(math.random() * 5)
 		else
 			self.wolfSpawnTime = self.wolfSpawnTime - 1
 		end
@@ -109,7 +109,7 @@ function GameScreen:update(dt)
 
 	-- update the world
 	world:update(dt)
-	
+
 end
 
 function GameScreen:render()
